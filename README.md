@@ -95,5 +95,8 @@ Des Weiteren ist der Client mit der Bezeichnung employee-management-service-fron
 
 # Bugs
 
-Trage hier die Features ein, die nicht funktionieren. Beschreibe den jeweiligen Fehler. 
-
+Wenn bei der Anfrage ans Backend ein Fehler in der Konsole (HttpStatus: 504) angezeigt wird und in Intellij in der run-Console der Fehler
+```
+  http://localhost:8089/employees [ECONNREFUSED] (https://nodejs.org/api/errors.html#errors_common_system_errors)
+```
+Dann muss ein neuer Container für das Backend gestartet werden.
