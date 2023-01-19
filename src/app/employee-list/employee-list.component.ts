@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Employee} from "../Employee";
 import {KeycloakService} from "keycloak-angular";
-import {RequestService} from "../services/request.service";
+import {EmployeeService} from "../services/employee.service";
 
 @Component({
   selector: 'app-employee-list',
@@ -12,7 +12,7 @@ export class EmployeeListComponent implements OnInit {
 
   employees: Employee[] = [];
 
-  constructor(private requestService:RequestService, private keycloakService: KeycloakService) {
+  constructor(private employeeService: EmployeeService, private keycloakService: KeycloakService) {
   }
 
   ngOnInit(): void {
@@ -20,7 +20,7 @@ export class EmployeeListComponent implements OnInit {
   }
 
   private getEmployees(): void {
-    this.requestService
+    this.employeeService
       .fetchEmployees()
       .subscribe(employees => this.employees = employees);
   }
