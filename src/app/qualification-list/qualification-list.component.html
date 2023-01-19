@@ -1,0 +1,16 @@
+<h1>All Qualifications</h1>
+<ul>
+  <li *ngFor="let e of qualifications">
+    {{e.designation }}
+    <button (click)="delete(e)">delete</button>
+  </li>
+</ul>
+<div class="new-qualification">
+  <h2>New Qualification</h2>
+  <form>
+    <input id="new-qualification-designation" #qualificationDesignation>
+    <button type="button" class="add-button" (click)="add(qualificationDesignation.value); qualificationDesignation.value=''">
+      Add
+    </button>
+  </form>
+</div>
