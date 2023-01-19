@@ -7,11 +7,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
 import {initializeKeycloak} from "./utitlity/app.init";
+import { QualificationListComponent } from './qualification-list/qualification-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    EmployeeListComponent
+    EmployeeListComponent,
+    QualificationListComponent
   ],
   imports: [
     BrowserModule,
