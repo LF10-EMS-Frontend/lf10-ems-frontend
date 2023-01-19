@@ -24,8 +24,4 @@ export class EmployeeListComponent implements OnInit {
       .fetchEmployees()
       .subscribe(employees => this.employees = employees);
   }
-
-  logout(): void {
-    this.keycloakService.logout('http://localhost:4200/');
-  }
 }
