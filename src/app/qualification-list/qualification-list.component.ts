@@ -24,19 +24,19 @@ export class QualificationListComponent implements OnInit {
       .subscribe(qualifications => this.qualifications = qualifications);
   }
 
-  add(designation: string): void {
-    designation = designation.trim();
-    if (!designation) {
+  add(skill: string): void {
+    skill = skill.trim();
+    if (!skill) {
       return;
     }
-    this.qualificationService.postQualification({ designation } as Qualification)
+    this.qualificationService.postQualification({ skill } as Qualification)
       .subscribe(qualification => {
         this.qualifications.push(qualification);
       });
   }
 
   delete(qualification: Qualification): void {
-    this.qualifications = this.qualifications.filter(q => q.designation !== qualification.designation);
+    this.qualifications = this.qualifications.filter(q => q.skill !== qualification.skill);
     this.qualificationService.deleteQualification(qualification).subscribe();
   }
 }

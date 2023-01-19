@@ -30,7 +30,7 @@ export class QualificationService {
     const options = {
       headers: this.httpOptions.headers,
       body: {
-        designation: qualification.designation,
+        skill: qualification.skill,
       }
     };
     return this.http.delete<Qualification>('/backend/qualifications', options)
