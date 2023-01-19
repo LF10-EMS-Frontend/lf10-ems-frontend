@@ -40,8 +40,4 @@ export class EmployeeListComponent implements OnInit {
         .set('Authorization', `Bearer ${this.bearer}`)
     });
   }
-
-  logout(): void {
-    this.keycloakService.logout('http://localhost:4200/');
-  }
 }
