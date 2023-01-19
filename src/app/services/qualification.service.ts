@@ -39,6 +39,11 @@ export class QualificationService {
       );
   }
 
+  updateQualification(oldQualification: Qualification, newQualification: Qualification) {
+    this.deleteQualification(oldQualification);
+    this.postQualification(newQualification);
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(operation + ':' + error);
