@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {Observable, of} from "rxjs";
 import {Employee} from "../Employee";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {KeycloakService} from "keycloak-angular";
+import {EmployeeService} from "../services/employee.service";
 
 @Component({
   selector: 'app-employee-list',
@@ -11,33 +9,57 @@ import {KeycloakService} from "keycloak-angular";
 })
 export class EmployeeListComponent implements OnInit {
 
-  bearer:String = '';
-  employees$: Observable<Employee[]>;
-  user:String = '';
+  employees: Employee[] = [];
 
-  constructor(private http: HttpClient, private keycloakService: KeycloakService) {
-    this.employees$ = of([]);
-    this.fetchData();
+  constructor(private employeeService: EmployeeService) {
   }
 
   ngOnInit(): void {
-    this.initializeUserOptions();
+    this.getEmployees();
   }
 
-  private initializeUserOptions() {
-    this.user = this.keycloakService.getUsername();
-    this.initBearerToken();
+  private getEmployees(): void {
+    this.employeeService
+      .fetchEmployees()
+      .subscribe(employees => this.employees = employees);
   }
 
-  private async initBearerToken() {
-    this.bearer = await this.keycloakService.getToken();
+  deleteEmployeeEndpoint() {
+    let employee = this.employees.pop();
+    this.employeeService.deleteEmployee(employee!.id!)
+      .subscribe();
+  }
+  postEmployeeEndpoint() {
+    let rng: number = Math.floor(Math.random() * 100) + 1;
+    const employee = new Employee(
+      undefined,
+      "doe" + rng,
+      "John" + rng,
+      "123 Main St",
+      "12345",
+      "New York",
+      "555-555-5555",
+      ["Java"],
+    )
+    console.log(employee);
+    this.employeeService
+      .postEmployee(employee).subscribe();
   }
 
-  fetchData() {
-    this.employees$ = this.http.get<Employee[]>('/backend', {
-      headers: new HttpHeaders()
-        .set('Content-Type', 'application/json')
-        .set('Authorization', `Bearer ${this.bearer}`)
-    });
+  putEmployeeEndpoint() {
+    let rng: number = Math.floor(Math.random() * 100) + 1;
+    const employee = new Employee(
+      3,
+      "doe" + rng,
+      "John" + rng,
+      "123 Main St",
+      "12345",
+      "New York",
+      "555-555-5555",
+      ["Java", "Angular"],
+    );
+    console.log(employee);
+
+    this.employeeService.putEmployee(employee).subscribe();
   }
 }
