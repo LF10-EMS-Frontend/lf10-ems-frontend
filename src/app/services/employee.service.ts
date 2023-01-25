@@ -25,14 +25,13 @@ export class EmployeeService {
     // TODO: Optimize api calls by updating the internal data with the returned Employee
     // Re-Fetching the employees when rendering the landing page then becomes redundant
 
-    this.http.put<Employee>(`/backend/employees/{employee.id}`, employee, this.httpOptions)
+    return this.http.put<Employee>(
+      '/backend/employees/' + employee.id, employee, this.httpOptions)
       .pipe(catchError(
         this.errorService.handleError<Employee>("putEmployee", employee)))
   }
 
   public deleteEmployee(employeeId: number) {
-    console.log("delete method used")
-    console.log(employeeId)
     return this.http.delete('/backend/employees/' + employeeId, this.httpOptions)
       .pipe(catchError(
         this.errorService.handleError("deleteEmployee", employeeId)
@@ -40,7 +39,8 @@ export class EmployeeService {
   }
 
   public postEmployee(employee: Employee) {
-    this.http.post<Employee>("/backend/employees", employee, this.httpOptions)
+    delete employee.id
+    return this.http.post<Employee>("/backend/employees", employee, this.httpOptions)
       .pipe(catchError(
         this.errorService.handleError<Employee>("postEmployee", employee)
       ))

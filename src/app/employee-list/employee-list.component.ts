@@ -25,8 +25,43 @@ export class EmployeeListComponent implements OnInit {
       .subscribe(employees => this.employees = employees);
   }
 
-  testEmployeeEndpoint() {
+  deleteEmployeeEndpoint() {
+    let employee = this.employees.pop()
+    this.employeeService.deleteEmployee(employee!.id!)
+      .subscribe()
+  }
+  postEmployeeEndpoint() {
+    let rng: number = Math.floor(Math.random() *100) + 1;
+    const employee = new Employee(
+      undefined,
+      "doe" + rng,
+      "John" + rng,
+      "123 Main St",
+      "12345",
+      "New York",
+      "555-555-5555",
+      ["Java"],
+    )
+    delete employee.id
+    console.log(employee)
     this.employeeService
-      .deleteEmployee(1)
+      .postEmployee(employee).subscribe()
+  }
+
+  putEmployeeEndpoint() {
+    let rng: number = Math.floor(Math.random() *100) + 1;
+    const employee = new Employee(
+      3,
+      "doe" + rng,
+      "John" + rng,
+      "123 Main St",
+      "12345",
+      "New York",
+      "555-555-5555",
+      ["Java", "Angular"],
+    )
+    console.log(employee)
+
+    this.employeeService.putEmployee(employee).subscribe()
   }
 }
