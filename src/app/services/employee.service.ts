@@ -21,6 +21,13 @@ export class EmployeeService {
     return this.http.get<Employee[]>('/backend/employees', this.httpOptions);
   }
 
+  public fetchEmployee(employeeId: number): Observable<Employee> {
+    return this.http.get<Employee>('/backend/employees/' + employeeId, this.httpOptions)
+      .pipe(
+        catchError(this.errorService.handleError<Employee>("getEmployee", new Employee(employeeId)))
+      );
+  }
+
   public putEmployee(employee: Employee) {
     return this.http.put<Employee>(
       '/backend/employees/' + employee.id, employee, this.httpOptions)
