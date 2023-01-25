@@ -4,10 +4,6 @@
   padding: 0;
 }
 
-navbar {
-  display: flex;
-}
-
 ul {
   list-style-type: none;
   margin: 0;
@@ -39,4 +35,35 @@ li a:hover {
 
 #logout {
   cursor: pointer;
+  text-align: center;
+}
+
+/* NEU */
+
+.bg-own-color {
+  background-color: #333333;
+}
+
+.btn-submit {
+  background-color: #F2921D;
+  color: white;
+  border: none;
+}
+
+svg {
+  width: 40px;
+  height: 40px;
+  fill: white;
+}
+svg:hover {
+  fill: #F2921D;
+}
+
+.navbar-toggler-icon {
+  border-radius: 15%;
+  background-color: #F2921D;
+}
+
+.form-control {
+  color: #111111;
 }
