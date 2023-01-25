@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {Employee} from "../Employee";
-import {KeycloakService} from "keycloak-angular";
 import {EmployeeService} from "../services/employee.service";
 
 @Component({
@@ -12,7 +11,7 @@ export class EmployeeListComponent implements OnInit {
 
   employees: Employee[] = [];
 
-  constructor(private employeeService: EmployeeService, private keycloakService: KeycloakService) {
+  constructor(private employeeService: EmployeeService) {
   }
 
   ngOnInit(): void {
@@ -26,12 +25,12 @@ export class EmployeeListComponent implements OnInit {
   }
 
   deleteEmployeeEndpoint() {
-    let employee = this.employees.pop()
+    let employee = this.employees.pop();
     this.employeeService.deleteEmployee(employee!.id!)
-      .subscribe()
+      .subscribe();
   }
   postEmployeeEndpoint() {
-    let rng: number = Math.floor(Math.random() *100) + 1;
+    let rng: number = Math.floor(Math.random() * 100) + 1;
     const employee = new Employee(
       undefined,
       "doe" + rng,
@@ -42,14 +41,13 @@ export class EmployeeListComponent implements OnInit {
       "555-555-5555",
       ["Java"],
     )
-    delete employee.id
-    console.log(employee)
+    console.log(employee);
     this.employeeService
-      .postEmployee(employee).subscribe()
+      .postEmployee(employee).subscribe();
   }
 
   putEmployeeEndpoint() {
-    let rng: number = Math.floor(Math.random() *100) + 1;
+    let rng: number = Math.floor(Math.random() * 100) + 1;
     const employee = new Employee(
       3,
       "doe" + rng,
@@ -59,9 +57,9 @@ export class EmployeeListComponent implements OnInit {
       "New York",
       "555-555-5555",
       ["Java", "Angular"],
-    )
-    console.log(employee)
+    );
+    console.log(employee);
 
-    this.employeeService.putEmployee(employee).subscribe()
+    this.employeeService.putEmployee(employee).subscribe();
   }
 }

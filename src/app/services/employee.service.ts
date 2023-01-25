@@ -14,28 +14,25 @@ export class EmployeeService {
   constructor(private http: HttpClient,
               private requestService: RequestService,
               private errorService: ErrorService) {
-    this.httpOptions = this.requestService.getHttpOption()
+    this.httpOptions = this.requestService.getHttpOption();
   }
 
   public fetchEmployees(): Observable<Employee[]> {
-    return this.http.get<Employee[]>('/backend/employees', this.httpOptions)
+    return this.http.get<Employee[]>('/backend/employees', this.httpOptions);
   }
 
   public putEmployee(employee: Employee) {
-    // TODO: Optimize api calls by updating the internal data with the returned Employee
-    // Re-Fetching the employees when rendering the landing page then becomes redundant
-
     return this.http.put<Employee>(
       '/backend/employees/' + employee.id, employee, this.httpOptions)
       .pipe(catchError(
-        this.errorService.handleError<Employee>("putEmployee", employee)))
+        this.errorService.handleError<Employee>("putEmployee", employee)));
   }
 
   public deleteEmployee(employeeId: number) {
     return this.http.delete('/backend/employees/' + employeeId, this.httpOptions)
       .pipe(catchError(
         this.errorService.handleError("deleteEmployee", employeeId)
-      ))
+      ));
   }
 
   public postEmployee(employee: Employee) {
@@ -43,6 +40,6 @@ export class EmployeeService {
     return this.http.post<Employee>("/backend/employees", employee, this.httpOptions)
       .pipe(catchError(
         this.errorService.handleError<Employee>("postEmployee", employee)
-      ))
+      ));
   }
 }
