@@ -12,7 +12,7 @@ export class QualificationListComponent implements OnInit {
   qualifications: Qualification[] = [];
 
   editQualification?: Qualification;
-  oldQualificationSkill: String = '';
+  oldQualificationSkill: string = '';
 
   constructor(private qualificationService: QualificationService) {
   }
@@ -70,7 +70,8 @@ export class QualificationListComponent implements OnInit {
     return this.editQualification === qualification;
   }
 
-  cancel():void {
+  cancel(qualification:Qualification):void {
+    qualification.skill = this.oldQualificationSkill;
     this.editQualification = undefined;
   }
 
