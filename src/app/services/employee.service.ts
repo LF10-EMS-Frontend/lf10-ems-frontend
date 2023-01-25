@@ -31,7 +31,9 @@ export class EmployeeService {
   }
 
   public deleteEmployee(employeeId: number) {
-    this.http.delete(`/backend/employees/{employeeId}`, this.httpOptions)
+    console.log("delete method used")
+    console.log(employeeId)
+    return this.http.delete('/backend/employees/' + employeeId, this.httpOptions)
       .pipe(catchError(
         this.errorService.handleError("deleteEmployee", employeeId)
       ))

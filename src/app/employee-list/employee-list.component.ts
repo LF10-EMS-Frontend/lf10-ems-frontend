@@ -24,4 +24,9 @@ export class EmployeeListComponent implements OnInit {
       .fetchEmployees()
       .subscribe(employees => this.employees = employees);
   }
+
+  testEmployeeEndpoint() {
+    this.employeeService
+      .deleteEmployee(1)
+  }
 }
