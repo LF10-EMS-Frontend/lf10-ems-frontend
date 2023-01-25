@@ -75,6 +75,11 @@ export class QualificationListComponent implements OnInit {
   }
 
   save(qualification: Qualification): void {
+    if (qualification.skill === this.editQualification!.skill) {
+      this.oldQualificationSkill = '';
+      this.editQualification = undefined;
+      return;
+    }
     if (qualification.skill !== '') {
       this.delete({skill: this.oldQualificationSkill} as Qualification);
       this.update(this.editQualification!.skill);
