@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {catchError, Observable, of} from "rxjs";
 import {Qualification} from "../Qualification";
 import {RequestService} from "./request.service";
+import {ErrorService} from "./error.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,9 @@ export class QualificationService {
 
   httpOptions: {headers: HttpHeaders};
 
-  constructor(private http: HttpClient, private requestService: RequestService) {
+  constructor(private http: HttpClient,
+              private requestService: RequestService,
+              private errorService: ErrorService) {
     this.httpOptions = this.requestService.getHttpOption();
   }
 
@@ -22,7 +25,7 @@ export class QualificationService {
   public postQualification(qualification: Qualification): Observable<Qualification> {
     return this.http.post<Qualification>('/backend/qualifications', qualification, this.httpOptions)
       .pipe(
-        catchError(this.handleError<Qualification>('postQualification', qualification))
+        catchError(this.errorService.handleError<Qualification>('postQualification', qualification))
       );
   }
 
@@ -35,19 +38,12 @@ export class QualificationService {
     };
     return this.http.delete<Qualification>('/backend/qualifications', options)
       .pipe(
-        catchError(this.handleError<Qualification>('deleteQualification', qualification))
+        catchError(this.errorService.handleError<Qualification>('deleteQualification', qualification))
       );
   }
 
   updateQualification(oldQualification: Qualification, newQualification: Qualification) {
     this.deleteQualification(oldQualification);
     this.postQualification(newQualification);
-  }
-
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(operation + ':' + error);
-      return of(result as T);
-    };
   }
 }

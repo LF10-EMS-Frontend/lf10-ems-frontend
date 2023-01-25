@@ -34,8 +34,4 @@ export class RequestService {
   private async initBearerToken() {
     this.bearer = await this.keycloakService.getToken();
   }
-
-  public fetchEmployees():  Observable<Employee[]> {
-    return this.http.get<Employee[]>('/backend/employees', this.httpOptions);
-  }
 }
