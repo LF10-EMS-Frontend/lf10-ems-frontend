@@ -4,8 +4,6 @@
   padding: 0;
 }
 
-
-
 ul {
   list-style-type: none;
   margin: 0;
@@ -37,6 +35,7 @@ li a:hover {
 
 #logout {
   cursor: pointer;
+  text-align: center;
 }
 
 /* NEU */
@@ -58,4 +57,13 @@ svg {
 }
 svg:hover {
   fill: #F2921D;
+}
+
+.navbar-toggler-icon {
+  border-radius: 15%;
+  background-color: #F2921D;
+}
+
+.form-control {
+  color: #111111;
 }
