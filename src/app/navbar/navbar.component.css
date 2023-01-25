@@ -4,9 +4,7 @@
   padding: 0;
 }
 
-navbar {
-  display: flex;
-}
+
 
 ul {
   list-style-type: none;
@@ -39,4 +37,25 @@ li a:hover {
 
 #logout {
   cursor: pointer;
+}
+
+/* NEU */
+
+.bg-own-color {
+  background-color: #333333;
+}
+
+.btn-submit {
+  background-color: #F2921D;
+  color: white;
+  border: none;
+}
+
+svg {
+  width: 40px;
+  height: 40px;
+  fill: white;
+}
+svg:hover {
+  fill: #F2921D;
 }
