@@ -22,7 +22,7 @@
         </li>
       </ul>
       <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <input [formControl]="searchControl" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn-submit btn px-2 py-1" type="submit">Search</button>
       </form>
       <a class="nav-link px-2 text-white" id="logout" (click)="logout()">Logout</a>

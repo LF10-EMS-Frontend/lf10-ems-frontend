@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Employee} from "../Employee";
 import {EmployeeService} from "../services/employee.service";
+import {Router} from "@angular/router";
+import {map, Observable, startWith, Subject, switchMap, tap} from "rxjs";
 
 @Component({
   selector: 'app-employee-list',
@@ -9,19 +11,39 @@ import {EmployeeService} from "../services/employee.service";
 })
 export class EmployeeListComponent implements OnInit {
 
-  employees: Employee[] = [];
+  employees: Employee[] = []
+  allEmployees$: Observable<Employee[]>
+  filteredEmployees$: Observable<Employee[]>
+  searchChange: any = new Subject<string>()
 
-  constructor(private employeeService: EmployeeService) {
-  }
+  constructor(
+    private employeeService: EmployeeService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.getEmployees();
+    this.allEmployees$ = this.allEmployees$ = this.employeeService.fetchEmployees();
+
+    this.filteredEmployees$ = this.searchChange.pipe(
+      startWith(''),
+      map((search: string) => search.toLowerCase()),
+      // tap((search: string) => console.log("navbar: " + search)),
+      switchMap((search: string) => this.allEmployees$.pipe(
+        map((employees: Employee[]) => employees.filter(e => {
+        return e.id?.toString().includes(search) ||
+          e.firstName?.toLowerCase().includes(search) ||
+          e.lastName?.toLowerCase().includes(search)
+        }))
+      ))
+    )
+
+    this.filteredEmployees$.subscribe(employees => this.employees = employees)
   }
 
-  private getEmployees(): void {
-    this.employeeService
-      .fetchEmployees()
-      .subscribe(employees => this.employees = employees);
+  // Below are just testing Methods, which will eventually be deleted
+  displayEmployee(employee: Employee) {
+    // this.router.navigate(['/employee', employee.id]);
+    console.log(employee);
   }
 
   deleteEmployeeEndpoint() {

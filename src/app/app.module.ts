@@ -9,7 +9,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
 import {initializeKeycloak} from "./utitlity/app.init";
 import { QualificationListComponent } from './qualification-list/qualification-list.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -24,6 +24,7 @@ import {FormsModule} from "@angular/forms";
     HttpClientModule,
     AppRoutingModule,
     KeycloakAngularModule,
+    ReactiveFormsModule,
     FormsModule
   ],
   providers: [

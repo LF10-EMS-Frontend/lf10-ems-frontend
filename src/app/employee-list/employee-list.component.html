@@ -1,10 +1,12 @@
+<app-navbar (searchChange)="searchChange.next($event)"> </app-navbar>
 <h1>All Employees</h1>
 <ul>
-  <li *ngFor="let e of employees">
+  <li *ngFor="let e of employees" (click)="displayEmployee(e)" class="employee-list-item">
     {{e.lastName }}, {{e.firstName}}
   </li>
 </ul>
 
+<!-- Just for testing-->
 <button type="button" class="test-button" (click)="deleteEmployeeEndpoint()" > Delete </button>
 <button type="button" class="test-button" (click)="postEmployeeEndpoint()" > Post </button>
 <button type="button" class="test-button" (click)="putEmployeeEndpoint()" > Put </button>
