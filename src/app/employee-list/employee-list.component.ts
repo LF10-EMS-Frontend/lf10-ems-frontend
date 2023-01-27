@@ -3,6 +3,9 @@ import {Employee} from "../Employee";
 import {EmployeeService} from "../services/employee.service";
 import {Router} from "@angular/router";
 import {map, Observable, startWith, Subject, switchMap, tap} from "rxjs";
+import {FormControl} from "@angular/forms";
+import {Qualification} from "../Qualification";
+import {QualificationService} from "../services/qualification.service";
 
 @Component({
   selector: 'app-employee-list',
@@ -12,23 +15,24 @@ import {map, Observable, startWith, Subject, switchMap, tap} from "rxjs";
 export class EmployeeListComponent implements OnInit {
 
   employees: Employee[] = []
-  allEmployees$: Observable<Employee[]>
-  filteredEmployees$: Observable<Employee[]>
   searchChange: any = new Subject<string>()
+  qualifications: Observable<Qualification[]>
+  filter = new FormControl('')
 
   constructor(
     private employeeService: EmployeeService,
+    private qualificationService: QualificationService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.allEmployees$ = this.allEmployees$ = this.employeeService.fetchEmployees();
+    let allEmployees$ = this.employeeService.fetchEmployees()
 
-    this.filteredEmployees$ = this.searchChange.pipe(
+    let searchedEmployees$ = this.searchChange.pipe(
       startWith(''),
       map((search: string) => search.toLowerCase()),
       // tap((search: string) => console.log("navbar: " + search)),
-      switchMap((search: string) => this.allEmployees$.pipe(
+      switchMap((search: string) => allEmployees$.pipe(
         map((employees: Employee[]) => employees.filter(e => {
         return e.id?.toString().includes(search) ||
           e.firstName?.toLowerCase().includes(search) ||
@@ -37,7 +41,19 @@ export class EmployeeListComponent implements OnInit {
       ))
     )
 
-    this.filteredEmployees$.subscribe(employees => this.employees = employees)
+    this.qualifications = this.qualificationService.fetchQualifications()
+    /*
+    this.filter.valueChanges.pipe(
+      startWith(''),
+      switchMap((filter: string) => searchedEmployees$.pipe(
+        map((employees: Employee[]) => employees.filter(e => {
+
+        }))
+        )
+      )
+    )
+*/
+    searchedEmployees$.subscribe((employees: Employee[]) => this.employees = employees)
   }
 
   // Below are just testing Methods, which will eventually be deleted
@@ -47,9 +63,9 @@ export class EmployeeListComponent implements OnInit {
   }
 
   deleteEmployeeEndpoint() {
-    let employee = this.employees.pop();
+    let employee = this.employees.pop()
     this.employeeService.deleteEmployee(employee!.id!)
-      .subscribe();
+      .subscribe()
   }
   postEmployeeEndpoint() {
     let rng: number = Math.floor(Math.random() * 100) + 1;
