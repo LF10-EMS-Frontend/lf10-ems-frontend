@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Qualification} from "../Qualification";
 import {QualificationService} from "../services/qualification.service";
+import {map, Observable, startWith, Subject, Subscription, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-qualification-list',
@@ -9,22 +10,25 @@ import {QualificationService} from "../services/qualification.service";
 })
 export class QualificationListComponent implements OnInit {
 
-  qualifications: Qualification[] = [];
+  qualifications: Qualification[]
 
   editQualification?: Qualification;
   oldQualificationSkill: string = '';
+  searchChange: Subject<string> = new Subject();
 
   constructor(private qualificationService: QualificationService) {
   }
 
   ngOnInit() {
-    this.getQualifications();
-  }
-
-  private getQualifications(): void {
-    this.qualificationService
-      .fetchQualifications()
-      .subscribe(qualifications => this.qualifications = qualifications);
+    let allQualifications$ = this.qualificationService.fetchQualifications()
+    this.searchChange.pipe(
+      startWith(''),
+      switchMap((search: string) => allQualifications$.pipe(
+        map((qualifications: Qualification[]) => qualifications.filter(q =>
+          q.skill?.toLowerCase().includes(search.toLowerCase())
+        ))
+      ))
+    ).subscribe(qualifications => this.qualifications = qualifications)
   }
 
   add(skill: string): void {

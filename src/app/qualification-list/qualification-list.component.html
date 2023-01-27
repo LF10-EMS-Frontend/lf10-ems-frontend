@@ -1,4 +1,4 @@
-<app-navbar> (filterEvent)="filterEmployees($event)</app-navbar>
+<app-navbar (searchChange)="searchChange.next($event)" ></app-navbar>
 <h1>All Qualifications</h1>
 <ul>
   <li *ngFor="let q of qualifications">
