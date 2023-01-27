@@ -1,7 +1,21 @@
 <app-navbar (searchChange)="searchChange.next($event)"> </app-navbar>
 <h1>All Employees</h1>
+
+<div class="form-group">
+  <select class="form-control" aria-label="Default select example">
+    <option>No Filter</option>
+    <option *ngFor="let q of qualifications$ | async" >{{ q.skill }} </option>
+  </select>
+</div>
+
+<ng-select
+  [items]="qualifications$ | async"
+  [multiple]="true"
+>Hallo</ng-select>
+
+
 <ul>
-  <li *ngFor="let e of employees" (click)="displayEmployee(e)" class="employee-list-item">
+  <li *ngFor="let e of employees$ | async" (click)="displayEmployee(e)" class="employee-list-item">
     {{e.lastName }}, {{e.firstName}}
   </li>
 </ul>
@@ -10,3 +24,12 @@
 <button type="button" class="test-button" (click)="deleteEmployeeEndpoint()" > Delete </button>
 <button type="button" class="test-button" (click)="postEmployeeEndpoint()" > Post </button>
 <button type="button" class="test-button" (click)="putEmployeeEndpoint()" > Put </button>
+
+<div>
+<select class="form-select" aria-label="Default select example">
+  <option selected>Open this select menu</option>
+  <option value="1">One</option>
+  <option value="2">Two</option>
+  <option value="3">Three</option>
+</select>
+</div>

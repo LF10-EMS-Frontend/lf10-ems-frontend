@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import {Router} from "@angular/router";
+import {FormControl} from "@angular/forms";
+
+import {fromEvent, map, filter, Observable, startWith, Subject, switchMap, takeLast, tap} from "rxjs";
+
 import {Employee} from "../Employee";
 import {EmployeeService} from "../services/employee.service";
-import {Router} from "@angular/router";
-import {map, Observable, startWith, Subject, switchMap, tap} from "rxjs";
-import {FormControl} from "@angular/forms";
 import {Qualification} from "../Qualification";
 import {QualificationService} from "../services/qualification.service";
 
@@ -14,9 +16,9 @@ import {QualificationService} from "../services/qualification.service";
 })
 export class EmployeeListComponent implements OnInit {
 
-  employees: Employee[] = []
+  employees$: Observable<any>
   searchChange: any = new Subject<string>()
-  qualifications: Observable<Qualification[]>
+  qualifications$: Observable<Qualification[]>
   filter = new FormControl('')
 
   constructor(
@@ -26,6 +28,15 @@ export class EmployeeListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.qualifications$ = this.qualificationService.fetchQualifications()
+
+    const select = document.querySelector('select.form-select') as HTMLSelectElement;
+    const select$ = fromEvent(select, 'change').pipe(
+      map(event => event.target as HTMLSelectElement),
+      map(select => select.value),
+      tap(select => console.log(select)),
+    )
+
     let allEmployees$ = this.employeeService.fetchEmployees()
 
     let searchedEmployees$ = this.searchChange.pipe(
@@ -41,19 +52,18 @@ export class EmployeeListComponent implements OnInit {
       ))
     )
 
-    this.qualifications = this.qualificationService.fetchQualifications()
-    /*
-    this.filter.valueChanges.pipe(
-      startWith(''),
+    this.employees$ = select$.pipe(
+      startWith('No Filter'),
       switchMap((filter: string) => searchedEmployees$.pipe(
         map((employees: Employee[]) => employees.filter(e => {
-
+          console.log("skillset: " + e.skillSet)
+          console.log("filter: " + filter)
+          if (filter === "No Filter") { return true }
+          return e.skillSet?.includes(filter)
         }))
         )
       )
     )
-*/
-    searchedEmployees$.subscribe((employees: Employee[]) => this.employees = employees)
   }
 
   // Below are just testing Methods, which will eventually be deleted
@@ -62,22 +72,25 @@ export class EmployeeListComponent implements OnInit {
     console.log(employee);
   }
 
-  deleteEmployeeEndpoint() {
-    let employee = this.employees.pop()
-    this.employeeService.deleteEmployee(employee!.id!)
-      .subscribe()
-  }
+  deleteEmployeeEndpoint() {}
+    /*
+      this.employees$.pipe(
+        map((e: Employee[]) => e.slice(0, -1),
+        concatMap((lastE: Employee) => this.employeeService)
+    }
+     */
+
   postEmployeeEndpoint() {
     let rng: number = Math.floor(Math.random() * 100) + 1;
     const employee = new Employee(
       undefined,
-      "doe" + rng,
-      "John" + rng,
+      "Mustermann" + rng,
+      "Max" + rng,
       "123 Main St",
       "12345",
       "New York",
       "555-555-5555",
-      ["Java"],
+      ["Angular", "TypeScript"],
     )
     console.log(employee);
     this.employeeService

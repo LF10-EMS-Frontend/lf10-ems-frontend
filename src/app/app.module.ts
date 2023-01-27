@@ -10,6 +10,7 @@ import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
 import {initializeKeycloak} from "./utitlity/app.init";
 import { QualificationListComponent } from './qualification-list/qualification-list.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {NgSelectModule} from "@ng-select/ng-select";
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     AppRoutingModule,
     KeycloakAngularModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgSelectModule,
   ],
   providers: [
     {
