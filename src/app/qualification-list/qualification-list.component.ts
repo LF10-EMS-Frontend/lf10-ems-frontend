@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {Qualification} from "../Qualification";
 import {QualificationService} from "../services/qualification.service";
-import {map, Observable, startWith, Subject, Subscription, switchMap} from "rxjs";
+import {BehaviorSubject, map, Observable, startWith, Subject, switchMap, tap} from "rxjs";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-qualification-list',
@@ -10,25 +10,34 @@ import {map, Observable, startWith, Subject, Subscription, switchMap} from "rxjs
 })
 export class QualificationListComponent implements OnInit {
 
-  qualifications: Qualification[]
-
-  editQualification?: Qualification;
-  oldQualificationSkill: string = '';
+  allQualifications$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([])
+  qualifications$: Observable<string[]>
+  editQualificationOld?: string;
+  editQualificationNew: string;
   searchChange: Subject<string> = new Subject();
 
   constructor(private qualificationService: QualificationService) {
   }
 
   ngOnInit() {
-    let allQualifications$ = this.qualificationService.fetchQualifications()
-    this.searchChange.pipe(
+    this.qualificationService.fetchQualifications()
+      .subscribe((qs: string[]) => this.allQualifications$.next(qs)
+    )
+    this.qualifications$ = this.searchChange.pipe(
       startWith(''),
-      switchMap((search: string) => allQualifications$.pipe(
-        map((qualifications: Qualification[]) => qualifications.filter(q =>
-          q.skill?.toLowerCase().includes(search.toLowerCase())
+      map((s: string) => s.toLowerCase()),
+      // tap((s: string) => console.log("searchChange: " + s)),
+      switchMap((search: string) => this.allQualifications$.pipe(
+        map((skills: string[]) => skills.filter((skill: string) =>
+          skill?.toLowerCase().includes(search)
         ))
-      ))
-    ).subscribe(qualifications => this.qualifications = qualifications)
+      )),
+      // tap((skills: string[]) => console.log("filteredList: " + skills))
+    )
+  }
+
+  toEdit(quali: string): boolean {
+    return this.editQualificationOld === quali
   }
 
   add(skill: string): void {
@@ -36,61 +45,44 @@ export class QualificationListComponent implements OnInit {
     if (!skill) {
       return;
     }
-    if (this.qualifications.find((q) => {
-      return q.skill === skill
-    })) {
+    let qualifications: string[] = this.allQualifications$.getValue()
+    if (qualifications.includes(skill)) {
       alert("This qualification already exists.");
       return;
     }
-    this.qualificationService.postQualification({ skill } as Qualification)
-      .subscribe(qualification => {
-        this.qualifications.push(qualification);
-      });
+    this.qualificationService.postQualification(skill)
+      .subscribe(() => {
+        qualifications.push(skill)
+        this.allQualifications$.next(qualifications);
+        return
+      })
+    return
   }
 
-  private update(skill: string): void {
-    skill = skill.trim();
-    if (!skill) {
-      return;
-    }
-    this.qualificationService.postQualification({ skill } as Qualification)
-      .subscribe();
-  }
-
-  delete(qualification: Qualification): void {
-    this.qualifications = this.qualifications.filter(q => q.skill !== qualification.skill);
+  delete(qualification: string): void {
     this.qualificationService.deleteQualification(qualification).subscribe();
+    this.allQualifications$.pipe(
+      map((qs: string[]) => qs.filter((q: string) => q !==qualification))
+    )
   }
 
-  edit(qualification: Qualification): void {
-    this.oldQualificationSkill = qualification.skill.trim();
-    this.editQualification = qualification;
+  edit(qualification: string): void {
+    this.editQualificationOld = qualification;
+    this.editQualificationNew = qualification;
   }
 
-  toEdit(qualification: Qualification): boolean {
-    if (!this.editQualification) {
-      return false;
-    }
-    return this.editQualification === qualification;
+  cancel(qualification: string):void {
+    this.editQualificationOld = undefined;
   }
 
-  cancel(qualification:Qualification):void {
-    qualification.skill = this.oldQualificationSkill;
-    this.editQualification = undefined;
-  }
-
-  save(qualification: Qualification): void {
-    if (qualification.skill === this.editQualification!.skill) {
-      this.oldQualificationSkill = '';
-      this.editQualification = undefined;
+  save(qualification: string): void {
+    if (qualification === this.editQualificationOld! || qualification === '') {
+      this.editQualificationOld = undefined;
       return;
     }
-    if (qualification.skill !== '') {
-      this.delete({skill: this.oldQualificationSkill} as Qualification);
-      this.update(this.editQualification!.skill);
-      this.editQualification = undefined;
-    } else {
-      this.oldQualificationSkill = '';
-    }
+    this.delete(this.editQualificationOld!);
+    this.qualificationService.postQualification(qualification)
+      .subscribe();
+    this.editQualificationOld = undefined;
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {catchError, Observable, of} from "rxjs";
+import {catchError, map, Observable} from "rxjs";
 import {Qualification} from "../Qualification";
 import {RequestService} from "./request.service";
 import {ErrorService} from "./error.service";
@@ -18,31 +18,36 @@ export class QualificationService {
     this.httpOptions = this.requestService.getHttpOption();
   }
 
-  public fetchQualifications():  Observable<Qualification[]> {
-    return this.http.get<Qualification[]>('/backend/qualifications', this.httpOptions);
+  public fetchQualifications():  Observable<string[]> {
+    return this.http.get<Qualification[]>('/backend/qualifications', this.httpOptions).pipe(
+      map((q: Qualification[]) => q.map((e: Qualification) => e.skill))
+    );
   }
 
-  public postQualification(qualification: Qualification): Observable<Qualification> {
-    return this.http.post<Qualification>('/backend/qualifications', qualification, this.httpOptions)
+  public postQualification(qualification: string): Observable<string> {
+    return this.http.post<Qualification>('/backend/qualifications', new Qualification(qualification), this.httpOptions)
       .pipe(
-        catchError(this.errorService.handleError<Qualification>('postQualification', qualification))
-      );
+        catchError(this.errorService.handleError<Qualification>('postQualification', new Qualification(qualification))),
+        map((qualification: Qualification) => qualification.skill)
+  );
   }
 
-  deleteQualification(qualification:Qualification): Observable<Qualification> {
+  deleteQualification(qualification: string): Observable<Qualification> {
     const options = {
       headers: this.httpOptions.headers,
       body: {
-        skill: qualification.skill,
+        skill: qualification,
       }
     };
+    // TODO: I don't think delete actually returns a Qualification :thinking:
+    //  Swagger says that you only get a response Code
     return this.http.delete<Qualification>('/backend/qualifications', options)
       .pipe(
-        catchError(this.errorService.handleError<Qualification>('deleteQualification', qualification))
+        catchError(this.errorService.handleError<Qualification>('deleteQualification', new Qualification(qualification)))
       );
   }
 
-  updateQualification(oldQualification: Qualification, newQualification: Qualification) {
+  updateQualification(oldQualification: string, newQualification: string) {
     this.deleteQualification(oldQualification);
     this.postQualification(newQualification);
   }
