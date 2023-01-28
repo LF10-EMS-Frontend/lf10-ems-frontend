@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 
-import {fromEvent, map, filter, Observable, startWith, Subject, switchMap, takeLast, tap} from "rxjs";
+import {map, Observable, startWith, Subject, switchMap, takeLast, tap} from "rxjs";
 
 import {Employee} from "../Employee";
 import {EmployeeService} from "../services/employee.service";
@@ -18,8 +18,10 @@ export class EmployeeListComponent implements OnInit {
 
   employees$: Observable<any>
   searchChange: any = new Subject<string>()
-  qualifications$: Observable<Qualification[]>
-  filter = new FormControl('')
+  // qualifications$: Observable<string[]>
+  qualifications$: Observable<string[]>
+  selectFilter = new FormControl();
+  debug: any
 
   constructor(
     private employeeService: EmployeeService,
@@ -29,13 +31,9 @@ export class EmployeeListComponent implements OnInit {
 
   ngOnInit(): void {
     this.qualifications$ = this.qualificationService.fetchQualifications()
-
-    const select = document.querySelector('select.form-select') as HTMLSelectElement;
-    const select$ = fromEvent(select, 'change').pipe(
-      map(event => event.target as HTMLSelectElement),
-      map(select => select.value),
-      tap(select => console.log(select)),
-    )
+      //.pipe(
+      //map((q: Qualification[]) => q.map((q: Qualification) => q.skill))
+    //)
 
     let allEmployees$ = this.employeeService.fetchEmployees()
 
@@ -52,18 +50,15 @@ export class EmployeeListComponent implements OnInit {
       ))
     )
 
-    this.employees$ = select$.pipe(
-      startWith('No Filter'),
-      switchMap((filter: string) => searchedEmployees$.pipe(
-        map((employees: Employee[]) => employees.filter(e => {
-          console.log("skillset: " + e.skillSet)
-          console.log("filter: " + filter)
-          if (filter === "No Filter") { return true }
-          return e.skillSet?.includes(filter)
-        }))
-        )
-      )
-    )
+    this.employees$ = searchedEmployees$
+
+    this.selectFilter.valueChanges.pipe(
+      startWith([]),
+      tap(skills => {
+        console.log(skills)
+        this.debug = skills
+      })
+  )
   }
 
   // Below are just testing Methods, which will eventually be deleted
