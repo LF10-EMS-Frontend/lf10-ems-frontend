@@ -27,24 +27,24 @@ export class EmployeeListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.qualifications$ = this.qualificationService.fetchQualifications()
+    this.qualifications$ = this.qualificationService.getQualifications()
 
     this.employees$ = combineLatest(
       this.selection$.valueChanges.pipe(startWith([])),
       this.search$.pipe(startWith('')),
-      this.employeeService.fetchEmployees(),
+      this.employeeService.getEmployees(),
     ).pipe(
       // tap(stuff => console.log(stuff)),
       map(([selection, search, employees]) =>
         this.filterFunction(selection, search, employees)
       )
     )
-      //.subscribe(data => console.log("something happened"))
+    this.employees$.subscribe(data => console.log('subscription: ' + data))
   }
 
   filterFunction(selection: string[], _search: string, employees: Employee[]) {
     let search = _search.toLowerCase()
-    console.log(`filterFunction selection: {selection} search: {search}`)
+    console.log('filterFunction selection: ' + selection + 'search: ' + search)
     return employees.filter(employee => {
         return employee.id?.toString().includes(search) ||
           employee.firstName?.toLowerCase().includes(search) ||

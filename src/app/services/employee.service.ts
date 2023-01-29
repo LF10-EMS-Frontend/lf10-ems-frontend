@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {RequestService} from "./request.service";
 import {Employee} from "../Employee";
-import {catchError, Observable} from "rxjs";
+import {BehaviorSubject, catchError, Observable, tap} from "rxjs";
 import {ErrorService} from "./error.service";
 
 @Injectable({
@@ -11,14 +11,23 @@ import {ErrorService} from "./error.service";
 export class EmployeeService {
 
   httpOptions: {headers: HttpHeaders}
+  private employees$: BehaviorSubject<Employee[]> = new BehaviorSubject<Employee[]>([])
   constructor(private http: HttpClient,
               private requestService: RequestService,
               private errorService: ErrorService) {
     this.httpOptions = this.requestService.getHttpOption();
+    this.fetchEmployees()
   }
 
-  public fetchEmployees(): Observable<Employee[]> {
-    return this.http.get<Employee[]>('/backend/employees', this.httpOptions);
+  private fetchEmployees(): void {
+    this.http.get<Employee[]>('/backend/employees', this.httpOptions).pipe(
+      // catchError(this.errorService.handleError())
+      tap((es: Employee[]) => console.log("Employees fetched"))
+    ).subscribe((es: Employee[]) => this.employees$.next(es))
+  }
+
+  public getEmployees(): Observable<Employee[]> {
+    return this.employees$.asObservable()
   }
 
   public putEmployee(employee: Employee) {
