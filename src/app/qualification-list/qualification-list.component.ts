@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {QualificationService} from "../services/qualification.service";
 import {BehaviorSubject, map, Observable, startWith, Subject, switchMap, tap} from "rxjs";
-import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-qualification-list',
@@ -20,20 +19,20 @@ export class QualificationListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.qualificationService.fetchQualifications()
-      .subscribe((qs: string[]) => this.allQualifications$.next(qs)
-    )
     this.qualifications$ = this.searchChange.pipe(
       startWith(''),
-      map((s: string) => s.toLowerCase()),
       // tap((s: string) => console.log("searchChange: " + s)),
-      switchMap((search: string) => this.allQualifications$.pipe(
-        map((skills: string[]) => skills.filter((skill: string) =>
-          skill?.toLowerCase().includes(search)
-        ))
+      switchMap((search: string) => this.qualificationService.fetchQualifications().pipe(
+        map((skills: string[]) => this.filterFunction(skills, search))
       )),
       // tap((skills: string[]) => console.log("filteredList: " + skills))
     )
+  }
+
+  filterFunction(qualifications: string[], search: string): string[] {
+    return qualifications.filter((q: string) => {
+      q?.toLowerCase().includes(search.toLowerCase())
+    })
   }
 
   toEdit(quali: string): boolean {
@@ -60,9 +59,10 @@ export class QualificationListComponent implements OnInit {
   }
 
   delete(qualification: string): void {
-    this.qualificationService.deleteQualification(qualification).subscribe();
-    this.allQualifications$.pipe(
-      map((qs: string[]) => qs.filter((q: string) => q !==qualification))
+    this.qualificationService.deleteQualification(qualification)
+      .subscribe();
+    this.allQualifications$.next(
+      this.allQualifications$.getValue().filter((q: string) => q !== qualification)
     )
   }
 
