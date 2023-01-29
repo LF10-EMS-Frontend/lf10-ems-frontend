@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {KeycloakService} from "keycloak-angular";
-import {debounceTime, distinctUntilChanged, tap} from "rxjs";
+import {debounceTime, distinctUntilChanged, startWith, tap} from "rxjs";
 import {FormControl} from "@angular/forms";
 
 @Component({
@@ -17,9 +17,10 @@ export class NavbarComponent implements OnInit{
   ngOnInit() {
     this.searchControl.valueChanges
       .pipe(
+        startWith(''),
         debounceTime(100),
-        distinctUntilChanged()
-        // tap(search => console.log("navbar: " + search))
+        distinctUntilChanged(),
+        tap(search => console.log("navbar: " + search))
       ).subscribe(search => this.searchChange.emit(search))
   }
 

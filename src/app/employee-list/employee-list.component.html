@@ -1,4 +1,4 @@
-<app-navbar (searchChange)="searchChange.next($event)"> </app-navbar>
+<app-navbar (searchChange)="search$.next($event)"> </app-navbar>
 <h1>All Employees</h1>
 
 <ng-select
@@ -6,11 +6,12 @@
   [multiple]="true"
   bindLabel="skill"
   [selectableGroup]="false"
-  [closeOnSelect]="false"
-  [formControl]="selectFilter"
+  [closeOnSelect]="true"
+  [clearSearchOnAdd]="true"
+  [formControl]="selection$"
 >
   <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-      <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.skill}}
+      <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item}}
   </ng-template>
 >Hallo</ng-select>
 

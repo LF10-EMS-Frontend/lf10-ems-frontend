@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 
-import {map, Observable, startWith, Subject, switchMap, takeLast, tap} from "rxjs";
+import {combineLatest, map, Observable, startWith, Subject, tap} from "rxjs";
 
 import {Employee} from "../Employee";
 import {EmployeeService} from "../services/employee.service";
-import {Qualification} from "../Qualification";
 import {QualificationService} from "../services/qualification.service";
 
 @Component({
@@ -16,12 +15,10 @@ import {QualificationService} from "../services/qualification.service";
 })
 export class EmployeeListComponent implements OnInit {
 
-  employees$: Observable<any>
-  searchChange: any = new Subject<string>()
-  // qualifications$: Observable<string[]>
+  employees$: Observable<Employee[]>
   qualifications$: Observable<string[]>
-  selectFilter = new FormControl();
-  debug: any
+  selection$: FormControl<string[]> = new FormControl();
+  search$: Subject<string> = new Subject<string>()
 
   constructor(
     private employeeService: EmployeeService,
@@ -31,34 +28,32 @@ export class EmployeeListComponent implements OnInit {
 
   ngOnInit(): void {
     this.qualifications$ = this.qualificationService.fetchQualifications()
-      //.pipe(
-      //map((q: Qualification[]) => q.map((q: Qualification) => q.skill))
-    //)
 
-    let allEmployees$ = this.employeeService.fetchEmployees()
-
-    let searchedEmployees$ = this.searchChange.pipe(
-      startWith(''),
-      map((search: string) => search.toLowerCase()),
-      // tap((search: string) => console.log("navbar: " + search)),
-      switchMap((search: string) => allEmployees$.pipe(
-        map((employees: Employee[]) => employees.filter(e => {
-        return e.id?.toString().includes(search) ||
-          e.firstName?.toLowerCase().includes(search) ||
-          e.lastName?.toLowerCase().includes(search)
-        }))
-      ))
+    this.employees$ = combineLatest(
+      this.selection$.valueChanges.pipe(startWith([])),
+      this.search$.pipe(startWith('')),
+      this.employeeService.fetchEmployees(),
+    ).pipe(
+      // tap(stuff => console.log(stuff)),
+      map(([selection, search, employees]) =>
+        this.filterFunction(selection, search, employees)
+      )
     )
+      //.subscribe(data => console.log("something happened"))
+  }
 
-    this.employees$ = searchedEmployees$
-
-    this.selectFilter.valueChanges.pipe(
-      startWith([]),
-      tap(skills => {
-        console.log(skills)
-        this.debug = skills
-      })
-  )
+  filterFunction(selection: string[], _search: string, employees: Employee[]) {
+    let search = _search.toLowerCase()
+    console.log(`filterFunction selection: {selection} search: {search}`)
+    return employees.filter(employee => {
+        return employee.id?.toString().includes(search) ||
+          employee.firstName?.toLowerCase().includes(search) ||
+          employee.lastName?.toLowerCase().includes(search)
+      }).filter((employee: Employee) => {
+        if (selection.length === 0) {return true}
+        if (employee.skillSet === undefined) {return false}
+        return selection.every(val => employee.skillSet!.includes(val))
+    })
   }
 
   // Below are just testing Methods, which will eventually be deleted
@@ -85,7 +80,8 @@ export class EmployeeListComponent implements OnInit {
       "12345",
       "New York",
       "555-555-5555",
-      ["Angular", "TypeScript"],
+      ["Java"]
+      //["Angular", "TypeScript"],
     )
     console.log(employee);
     this.employeeService
