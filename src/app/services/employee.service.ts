@@ -2,7 +2,7 @@ import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {RequestService} from "./request.service";
 import {Employee} from "../Employee";
-import {BehaviorSubject, catchError, Observable, tap} from "rxjs";
+import {BehaviorSubject, catchError, Observable, of, tap} from "rxjs";
 import {ErrorService} from "./error.service";
 
 @Injectable({
@@ -17,6 +17,12 @@ export class EmployeeService {
               private errorService: ErrorService) {
     this.httpOptions = this.requestService.getHttpOption();
     this.fetchEmployees()
+  }
+
+  private displayAndPassError<T>(message: string) {
+    return (error: any): Observable<T> => {
+      this.toastService.showToastMessage(message, "danger") return throwError(error);
+    }
   }
 
   private fetchEmployees(): void {
@@ -39,8 +45,10 @@ export class EmployeeService {
 
   public deleteEmployee(employeeId: number) {
     return this.http.delete('/backend/employees/' + employeeId, this.httpOptions)
-      .pipe(catchError(
+      .pipe(catchError((err: Error) => {
         this.errorService.handleError("deleteEmployee", employeeId)
+        return of(true)
+      }
       ));
   }
 
