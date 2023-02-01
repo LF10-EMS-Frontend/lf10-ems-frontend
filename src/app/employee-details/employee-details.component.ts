@@ -1,7 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {EmployeeService} from "../services/employee.service";
 import {Employee} from "../Employee";
+import {QualificationService} from "../services/qualification.service";
+import {Observable} from "rxjs";
+import {Qualification} from "../Qualification";
 
 @Component({
   selector: 'app-employee-details',
@@ -11,13 +14,57 @@ import {Employee} from "../Employee";
 export class EmployeeDetailsComponent implements OnInit {
 
   employee?: Employee;
+  qualifications: Qualification[] = [];
+  selectedSkill?: string;
+  newSkill?:string;
 
-  constructor(private route: ActivatedRoute, private employeeService: EmployeeService) {
+  constructor(private router: Router, private route: ActivatedRoute, private employeeService: EmployeeService, private qualificationService:QualificationService) {
   }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.employeeService.fetchEmployee(Number(id)).subscribe(e => this.employee = e);
+    let id = +this.route.snapshot.paramMap.get('id')!;
+    if (!isNaN(id)) {
+      if (id !== 0) {
+        this.employeeService.fetchEmployee(id).subscribe(e => this.employee = e);
+      } else {
+        this.employee = new Employee();
+      }
+      this.qualificationService
+        .fetchQualifications()
+        .subscribe(qualifications => this.qualifications = qualifications);
+    } else {
+      this.router.navigate(['/employee']);
+    }
   }
 
+  save(employee:Employee):void {
+    console.log(employee);
+    if (this.employee?.id) {
+      this.employeeService.putEmployee(employee).subscribe(e => this.employee = e);
+    } else {
+      this.employeeService.postEmployee(employee).subscribe(e => this.employee = e);
+    }
+  }
+
+  deleteSkillFromEmployee(skill:String, employee:Employee) {
+    employee.skillSet = employee.skillSet!.filter((s) => s !== skill);
+  }
+
+  cancel() {
+    this.router.navigate(['/employee']);
+  }
+
+  addSkill() {
+    if (this.employee!.skillSet!.filter((s) => s === this.selectedSkill).length < 1) {
+      this.employee!.skillSet!.push(this.selectedSkill!);
+    }
+    this.selectedSkill = "";
+  }
+
+  createQualification() {
+    if (this.newSkill) {
+      this.qualificationService.postQualification({skill: this.newSkill!}).subscribe(q => this.qualifications.push(q));
+      this.newSkill = "";
+    }
+  }
 }

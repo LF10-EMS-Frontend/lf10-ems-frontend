@@ -1,1 +1,84 @@
-<p>employee-details works!</p>
+<div *ngIf="employee" class="container">
+  <h1>Employee: {{employee.firstName}} {{employee.lastName}}</h1>
+  <div class="attribute-container">
+    <label class="attribute-label">id:</label>
+    <p>{{employee.id}}</p>
+  </div>
+  <form>
+    <div class="attribute-container">
+      <p class="attribute-label">First name:</p>
+      <input name="first-name" [(ngModel)]="employee.firstName">
+    </div>
+    <div class="attribute-container">
+      <p class="attribute-label">Last name:</p>
+      <input name="last-name" [(ngModel)]="employee.lastName">
+    </div>
+    <div class="attribute-container">
+      <p class="attribute-label">Street:</p>
+      <input name="street" [(ngModel)]="employee.street">
+    </div>
+    <div class="attribute-container">
+      <p class="attribute-label">Postcode:</p>
+      <input name="postcode" [(ngModel)]="employee.postcode">
+    </div>
+    <div class="attribute-container">
+      <p class="attribute-label">City:</p>
+      <input name="city" [(ngModel)]="employee.city">
+    </div>
+    <div class="attribute-container">
+      <p class="attribute-label">Phone:</p>
+      <input name="phone" [(ngModel)]="employee.phone">
+    </div>
+    <div class="attribute-container">
+      <p class="attribute-label">Skill Set:</p>
+      <div class="attribute-content">
+        <ul class="skill-container" *ngIf="employee.skillSet">
+          <li *ngFor="let skill of employee.skillSet">
+            <div class="skill-item">
+              {{skill}}
+              <div class="minus-btn" (click)="deleteSkillFromEmployee(skill, employee)">
+                -
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div class="dropdown-container">
+          <p class="dropdown-label">Select</p>
+          <select name="dropdown" class="dropdown-dropdown" [(ngModel)]="selectedSkill" (change)="addSkill()">
+            <option selected hidden></option>
+            <option *ngFor="let qualification of qualifications">
+              {{qualification.skill}}
+            </option>
+          </select>
+        </div>
+        <div class="new-qualification-container">
+          <p class="new-qualification-label">Create</p>
+          <input class="new-qualification-input" name="newSkill" [(ngModel)]="newSkill">
+          <button
+            class=""
+            type="button"
+            class="btn btn-primary"
+            (click)="createQualification()">
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="button-container">
+      <button
+        type="button"
+        class="btn btn-primary save-btn"
+        (click)="save(employee)">
+        Save
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+
