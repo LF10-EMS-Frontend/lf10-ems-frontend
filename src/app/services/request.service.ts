@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import {KeycloakService} from "keycloak-angular";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {Employee} from "../Employee";
-
 @Injectable({
   providedIn: 'root'
 })
