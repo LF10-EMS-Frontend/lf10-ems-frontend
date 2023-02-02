@@ -51,8 +51,8 @@ export class EmployeeService {
   }
 
   private postQualificationForEmployee(qualification:Qualification, employee:Employee) {
-    return this.http.post<Qualification>('/backend/employees/' + employee.id + '/qualifications', qualification, this.httpOptions)
-      .pipe(catchError(this.errorService.handleError<Qualification>('postQualificationForEmployee', qualification)));
+    return this.http.post<{id:number, lastName:string, firstName:string, skillSet:[{skill:string}]}>('/backend/employees/' + employee.id + '/qualifications', qualification, this.httpOptions)
+      .pipe(catchError(this.errorService.handleError<{id:number, lastName:string, firstName:string, skillSet:[{skill:string}]}>('postQualificationForEmployee', {id:employee.id!, firstName:employee.firstName!, lastName: employee.lastName!, skillSet: [qualification!]})));
   }
 
   private deleteQualificationForEmployee(qualification:Qualification, employee:Employee) {
