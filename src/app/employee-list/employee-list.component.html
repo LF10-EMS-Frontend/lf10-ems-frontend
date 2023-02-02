@@ -1,28 +1,28 @@
-<app-navbar (searchChange)="search$.next($event)"> </app-navbar>
+<app-navbar (searchChange)="search$.next($event)"></app-navbar>
 <h1>All Employees</h1>
 
 <ng-select
+  [clearSearchOnAdd]="true"
+  [closeOnSelect]="true"
+  [formControl]="selection$"
   [items]="qualifications$ | async"
   [multiple]="true"
-  bindLabel="skill"
   [selectableGroup]="false"
-  [closeOnSelect]="true"
-  [clearSearchOnAdd]="true"
-  [formControl]="selection$"
+  bindLabel="skill"
 >
-  <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-      <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item}}
+  <ng-template let-index="index" let-item="item" let-item$="item$" ng-option-tmp>
+    <input [ngModel]="item$.selected" id="item-{{index}}" type="checkbox"/> {{item}}
   </ng-template>
->Hallo</ng-select>
+</ng-select>
 
 
 <ul>
-  <li *ngFor="let e of employees$ | async" (click)="displayEmployee(e)" class="employee-list-item">
+  <li (click)="displayEmployee(e)" *ngFor="let e of employees$ | async" class="employee-list-item">
     {{e.lastName }}, {{e.firstName}}
   </li>
 </ul>
 
 <!-- Just for testing-->
-<button type="button" class="test-button" (click)="deleteEmployeeEndpoint()" > Delete </button>
-<button type="button" class="test-button" (click)="postEmployeeEndpoint()" > Post </button>
-<button type="button" class="test-button" (click)="putEmployeeEndpoint()" > Put </button>
+<button (click)="deleteEmployeeEndpoint()" class="test-button" type="button"> Delete</button>
+<button (click)="postEmployeeEndpoint()" class="test-button" type="button"> Post</button>
+<button (click)="putEmployeeEndpoint()" class="test-button" type="button"> Put</button>

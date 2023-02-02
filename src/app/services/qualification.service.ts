@@ -41,7 +41,6 @@ export class QualificationService {
       alert("This qualification already exists.");
       return;
     }
-
     this.http.post<Qualification>(
       '/backend/qualifications', new Qualification(skill), this.httpOptions
     ).pipe(
