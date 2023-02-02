@@ -107,18 +107,9 @@ export class EmployeeService {
   }
 
   private checkForUpdatedSkillSet(employee:Employee) {
-    this.employees$.subscribe((es) => {
-      es.forEach(e => {
-        if (e.id === employee.id) {
-          let oldEmployee:Employee = e;
-          if (!oldEmployee.skillSet) {
-            oldEmployee.skillSet = [];
-          }
-          this.checkForNewSkills(oldEmployee, employee);
-          this.checkForRemovedSkills(oldEmployee, employee);
-        }
-      })
-    })
+    let oldEmployee:Employee = this.employees$.getValue().find((e: Employee) => e.id === employee!.id!)!
+    this.checkForNewSkills(oldEmployee, employee);
+    this.checkForRemovedSkills(oldEmployee, employee);
   }
 
   private checkForNewSkills(oldEmployee:Employee, employee:Employee) {
