@@ -65,20 +65,23 @@ export class EmployeeService {
   }
 
   private checkForUpdatedSkillSet(employee:Employee) {
-    let oldEmployee:Employee;
-    this.fetchEmployee(employee.id!).subscribe(e => oldEmployee = e);
-    if (!oldEmployee!.skillSet) {
-      oldEmployee!.skillSet = [];
-    }
-    this.checkForNewSkills(oldEmployee!, employee);
-    this.checkForRemovedSkills(oldEmployee!, employee);
+    this.fetchEmployee(employee.id!).subscribe((e) => {
+      let oldEmployee:Employee = e;
+      if (!oldEmployee!.skillSet) {
+        oldEmployee!.skillSet = [];
+      }
+      this.checkForNewSkills(oldEmployee!, employee);
+      this.checkForRemovedSkills(oldEmployee!, employee);
+    });
   }
 
   private checkForNewSkills(oldEmployee:Employee, employee:Employee) {
-    employee.skillSet?.filter(s => !oldEmployee.skillSet?.includes(s)).forEach(s => this.postQualificationForEmployee({skill: s}, oldEmployee));
+    employee.skillSet?.filter(s => !oldEmployee.skillSet?.includes(s)).forEach(s => {
+      this.postQualificationForEmployee({skill: s}, employee).subscribe();
+    });
   }
 
   private checkForRemovedSkills(oldEmployee:Employee, employee:Employee) {
-    oldEmployee.skillSet!.filter(s => !employee.skillSet!.includes(s)).forEach(s => this.deleteQualificationForEmployee({skill:s}, employee));
+    oldEmployee.skillSet!.filter(s => employee.skillSet!.includes(s)).forEach(s => this.deleteQualificationForEmployee({skill:s}, employee));
   }
 }
