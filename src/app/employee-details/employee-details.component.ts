@@ -13,7 +13,7 @@ import {Qualification} from "../Qualification";
 export class EmployeeDetailsComponent implements OnInit {
 
   employee?: Employee;
-  qualifications: Qualification[] = [];
+  qualifications: string[] = [];
   selectedSkill?: string;
   newSkill?:string;
 
@@ -24,12 +24,14 @@ export class EmployeeDetailsComponent implements OnInit {
     let id = +this.route.snapshot.paramMap.get('id')!;
     if (!isNaN(id)) {
       if (id !== 0) {
-        this.employeeService.fetchEmployee(id).subscribe(e => this.employee = e);
+        this.employeeService.getEmployees().subscribe(es => {
+          this.employee = es.filter(e => id === e.id)[0];
+        })
       } else {
         this.employee = new Employee();
       }
       this.qualificationService
-        .fetchQualifications()
+        .getQualifications()
         .subscribe(qualifications => this.qualifications = qualifications);
     } else {
       this.router.navigate(['/employee']).then();
@@ -38,9 +40,9 @@ export class EmployeeDetailsComponent implements OnInit {
 
   save(employee:Employee):void {
     if (this.employee?.id) {
-      this.employeeService.putEmployee(employee).subscribe(e => this.employee = e);
+      this.employeeService.putEmployee(employee).subscribe();
     } else {
-      this.employeeService.postEmployee(employee).subscribe(e => this.employee = e);
+      this.employeeService.postEmployee(employee).subscribe();
     }
   }
 
@@ -61,7 +63,8 @@ export class EmployeeDetailsComponent implements OnInit {
 
   createQualification() {
     if (this.newSkill) {
-      this.qualificationService.postQualification({skill: this.newSkill!}).subscribe(q => this.qualifications.push(q));
+      this.qualificationService.postQualification(this.newSkill);
+      this.qualificationService.getQualifications().subscribe(qs => this.qualifications = qs);
       this.newSkill = "";
     }
   }

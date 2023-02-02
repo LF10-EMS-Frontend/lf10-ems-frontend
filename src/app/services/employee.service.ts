@@ -4,6 +4,7 @@ import { RequestService } from './request.service';
 import { Employee } from '../Employee';
 import { BehaviorSubject, catchError, map, Observable, tap } from 'rxjs';
 import { ErrorService } from './error.service';
+import {Qualification} from "../Qualification";
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,6 @@ export class EmployeeService {
   }
 
   public postEmployee(employee: Employee): Observable<string> {
-    delete employee.id;
     return this.http
       .post<Employee>('/backend/employees', employee, this.httpOptions)
       .pipe(
@@ -43,6 +43,9 @@ export class EmployeeService {
   }
 
   public putEmployee(employee: Employee): Observable<string> {
+    if (employee.skillSet) {
+      this.checkForUpdatedSkillSet(employee);
+    }
     return this.http
       .put<Employee>(
         '/backend/employees/' + employee.id,
@@ -93,7 +96,7 @@ export class EmployeeService {
       .subscribe((es: Employee[]) => this.employees$.next(es));
   }
 
-  private postQualificationForEmployee(qualification:Qualification, employee:Employee) {
+  public postQualificationForEmployee(qualification:Qualification, employee:Employee) {
     return this.http.post<{id:number, lastName:string, firstName:string, skillSet:[{skill:string}]}>('/backend/employees/' + employee.id + '/qualifications', qualification, this.httpOptions)
       .pipe(catchError(this.errorService.handleError<{id:number, lastName:string, firstName:string, skillSet:[{skill:string}]}>('postQualificationForEmployee', {id:employee.id!, firstName:employee.firstName!, lastName: employee.lastName!, skillSet: [qualification!]})));
   }
@@ -103,19 +106,23 @@ export class EmployeeService {
       headers: this.httpOptions.headers,
       body: qualification
     };
-    return this.http.delete<Qualification>('/backend/employees/' + employee.id + '/qualifications', options)
+    return this.http.delete<{id:number, lastName:string, firstName:string, skillSet:[skill:string]}>('/backend/employees/' + employee.id + '/qualifications', options)
       .pipe(catchError(this.errorService.handleError<Qualification>('deleteQualificationForEmployee', qualification)));
   }
 
   private checkForUpdatedSkillSet(employee:Employee) {
-    this.fetchEmployee(employee.id!).subscribe((e) => {
-      let oldEmployee:Employee = e;
-      if (!oldEmployee!.skillSet) {
-        oldEmployee!.skillSet = [];
-      }
-      this.checkForNewSkills(oldEmployee!, employee);
-      this.checkForRemovedSkills(oldEmployee!, employee);
-    });
+    this.employees$.subscribe((es) => {
+      es.forEach(e => {
+        if (e.id === employee.id) {
+          let oldEmployee:Employee = e;
+          if (!oldEmployee.skillSet) {
+            oldEmployee.skillSet = [];
+          }
+          this.checkForNewSkills(oldEmployee, employee);
+          this.checkForRemovedSkills(oldEmployee, employee);
+        }
+      })
+    })
   }
 
   private checkForNewSkills(oldEmployee:Employee, employee:Employee) {
@@ -125,6 +132,8 @@ export class EmployeeService {
   }
 
   private checkForRemovedSkills(oldEmployee:Employee, employee:Employee) {
-    oldEmployee.skillSet!.filter(s => employee.skillSet!.includes(s)).forEach(s => this.deleteQualificationForEmployee({skill:s}, employee));
+    oldEmployee.skillSet!.filter(s => !employee.skillSet!.includes(s)).forEach(s => {
+      this.deleteQualificationForEmployee({skill:s}, employee).subscribe();
+    });
   }
 }
