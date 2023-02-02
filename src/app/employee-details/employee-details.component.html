@@ -1,42 +1,44 @@
-<div *ngIf="employee" class="container">
-  <h1>Employee: {{employee.firstName}} {{employee.lastName}}</h1>
+<app-navbar></app-navbar>
+
+<div *ngIf="(employee.value)" class="container">
+  <h1>Employee: {{(employee.value).firstName}} {{(employee.value).lastName}}</h1>
   <div class="attribute-container">
     <label class="attribute-label">id:</label>
-    <p>{{employee.id}}</p>
+    <p>{{(employee.value).id}}</p>
   </div>
   <form>
     <div class="attribute-container">
       <p class="attribute-label">First name:</p>
-      <input name="first-name" [(ngModel)]="employee.firstName">
+      <input name="first-name" [(ngModel)]="(employee.value).firstName">
     </div>
     <div class="attribute-container">
       <p class="attribute-label">Last name:</p>
-      <input name="last-name" [(ngModel)]="employee.lastName">
+      <input name="last-name" [(ngModel)]="(employee.value).lastName">
     </div>
     <div class="attribute-container">
       <p class="attribute-label">Street:</p>
-      <input name="street" [(ngModel)]="employee.street">
+      <input name="street" [(ngModel)]="(employee.value).street">
     </div>
     <div class="attribute-container">
       <p class="attribute-label">Postcode:</p>
-      <input name="postcode" [(ngModel)]="employee.postcode">
+      <input name="postcode" [(ngModel)]="(employee.value).postcode">
     </div>
     <div class="attribute-container">
       <p class="attribute-label">City:</p>
-      <input name="city" [(ngModel)]="employee.city">
+      <input name="city" [(ngModel)]="(employee.value).city">
     </div>
     <div class="attribute-container">
       <p class="attribute-label">Phone:</p>
-      <input name="phone" [(ngModel)]="employee.phone">
+      <input name="phone" [(ngModel)]="(employee.value).phone">
     </div>
     <div class="attribute-container">
       <p class="attribute-label">Skill Set:</p>
       <div class="attribute-content">
-        <ul class="skill-container" *ngIf="employee.skillSet">
-          <li *ngFor="let skill of employee.skillSet">
+        <ul class="skill-container" *ngIf="(employee.value).skillSet">
+          <li *ngFor="let skill of (employee.value).skillSet">
             <div class="skill-item">
               {{skill}}
-              <div class="minus-btn" (click)="deleteSkillFromEmployee(skill, employee)">
+              <div class="minus-btn" (click)="deleteSkillFromEmployee(skill)">
                 -
               </div>
             </div>
@@ -46,7 +48,7 @@
           <p class="dropdown-label">Select</p>
           <select name="dropdown" class="dropdown-dropdown" [(ngModel)]="selectedSkill" (change)="addSkill()">
             <option selected hidden></option>
-            <option *ngFor="let qualification of qualifications">
+            <option *ngFor="let qualification of qualifications | async">
               {{qualification}}
             </option>
           </select>
@@ -55,7 +57,6 @@
           <p class="new-qualification-label">Create</p>
           <input class="new-qualification-input" name="newSkill" [(ngModel)]="newSkill">
           <button
-            class=""
             type="button"
             class="btn btn-primary"
             (click)="createQualification()">
@@ -68,7 +69,7 @@
       <button
         type="button"
         class="btn btn-primary save-btn"
-        (click)="save(employee)">
+        (click)="save((employee.value))">
         Save
       </button>
       <button
@@ -81,4 +82,3 @@
     </div>
   </form>
 </div>
-

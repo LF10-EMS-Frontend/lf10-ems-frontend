@@ -14,17 +14,15 @@ export class RequestService {
   };
 
   constructor(private keycloakService: KeycloakService, private http: HttpClient) {
-    this.initializeUserOptions();
-  }
-
-  private initializeUserOptions() {
-    this.initBearerToken();
+    this.initBearerToken().then();
+    console.log(this.bearer)
   }
 
   public getHttpOption(): {headers: HttpHeaders} {
     if (this.bearer === '') {
-      this.initializeUserOptions();
+      this.initBearerToken().then()
     }
+    console.log(this.bearer)
     return this.httpOptions;
   }
 

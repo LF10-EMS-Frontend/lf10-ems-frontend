@@ -60,8 +60,7 @@ export class EmployeeListComponent implements OnInit {
 
   // Below are just testing Methods, which will eventually be deleted
   displayEmployee(employee: Employee) {
-    // this.router.navigate(['/employee', employee.id]);
-    console.log(employee);
+    this.router.navigate(['/employee/' + employee.id]).then()
   }
 
   deleteEmployeeEndpoint() {
@@ -75,6 +74,8 @@ export class EmployeeListComponent implements OnInit {
   postEmployeeEndpoint() {
     let rng: number = Math.floor(Math.random() * 100) + 1;
     const employee = new Employee(
+      // ['Java', 'Blabla']
+      ['Angular', 'TypeScript'],
       undefined,
       'Mustermann' + rng,
       'Max' + rng,
@@ -82,8 +83,6 @@ export class EmployeeListComponent implements OnInit {
       '12345',
       'New York',
       '555-555-5555',
-      // ['Java', 'Blabla']
-      ['Angular', 'TypeScript']
     );
     console.log(employee);
     this.employeeService
@@ -96,6 +95,7 @@ export class EmployeeListComponent implements OnInit {
   putEmployeeEndpoint() {
     let rng: number = Math.floor(Math.random() * 100) + 1;
     const employee = new Employee(
+      ['Java', 'Angular', 'TypeScript'],
       3,
       'doe' + rng,
       'John' + rng,
@@ -103,7 +103,6 @@ export class EmployeeListComponent implements OnInit {
       '12345',
       'New York',
       '555-555-5555',
-      ['Java', 'Angular', 'TypeScript']
     );
     console.log(employee);
 
