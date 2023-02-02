@@ -33,17 +33,14 @@ export class EmployeeListComponent implements OnInit {
       this.search$.pipe(startWith('')),
       this.employeeService.getEmployees()
     ).pipe(
-      // tap(stuff => console.log(stuff)),
       map(([selection, search, employees]) =>
         this.filterFunction(selection, search, employees)
       )
     );
-    this.employees$.subscribe((data) => console.log('subscription: ' + data));
   }
 
   filterFunction(selection: string[], _search: string, employees: Employee[]) {
     let search = _search.toLowerCase();
-    console.log('filterFunction selection: ' + selection + 'search: ' + search);
     return employees
       .filter((employee) => {
         return (

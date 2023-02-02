@@ -20,7 +20,6 @@ export class NavbarComponent implements OnInit{
         startWith(''),
         debounceTime(100),
         distinctUntilChanged(),
-        tap(search => console.log("navbar: " + search))
       ).subscribe(search => this.searchChange.emit(search))
   }
 

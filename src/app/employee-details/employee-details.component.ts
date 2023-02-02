@@ -41,7 +41,6 @@ export class EmployeeDetailsComponent implements OnInit {
       // this.employeeSkills.next(this.employee.getValue().skillSet!)
     }
     if (isNaN(+id)) {
-      console.log(id)
       this.router.navigate(['/employee']).then();
       return
     }

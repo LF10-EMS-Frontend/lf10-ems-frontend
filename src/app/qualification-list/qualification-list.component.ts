@@ -22,9 +22,7 @@ export class QualificationListComponent implements OnInit {
       startWith(''),
       // tap((s: string) => console.log("searchChange: " + s)),
       switchMap((search: string) => this.qualificationService.getQualifications().pipe(
-        tap(skills => console.log('initialList: ' + skills)),
         map((skills: string[]) => this.filterFunction(skills, search)),
-        tap((skills: string[]) => console.log("filteredList: " + skills))
   )),
     )
   }

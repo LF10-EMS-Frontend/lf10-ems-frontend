@@ -35,8 +35,6 @@ export class EmployeeService {
           return 'Success';
         }),
         catchError((error: any) => {
-          console.log('postEmployee Error:');
-          console.log(error);
           return ['Invalid Employee modification: ' + error.toString()];
         })
       );
@@ -62,7 +60,6 @@ export class EmployeeService {
           return 'Success';
         }),
         catchError((error: any) => {
-          console.log('putEmployee Error: ' + error);
           return ['Invalid Employee creation: ' + error.toString()];
         })
       );
@@ -80,7 +77,6 @@ export class EmployeeService {
           return 'Success';
         }),
         catchError((error: any) => {
-          console.log('deleteEmployee Error: ' + error);
           return ['Invalid Employee deletion: ' + error.toString()];
         })
       );
