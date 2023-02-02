@@ -3,7 +3,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {EmployeeService} from "../services/employee.service";
 import {Employee} from "../Employee";
 import {QualificationService} from "../services/qualification.service";
-import {Observable} from "rxjs";
 import {Qualification} from "../Qualification";
 
 @Component({
@@ -33,12 +32,11 @@ export class EmployeeDetailsComponent implements OnInit {
         .fetchQualifications()
         .subscribe(qualifications => this.qualifications = qualifications);
     } else {
-      this.router.navigate(['/employee']);
+      this.router.navigate(['/employee']).then();
     }
   }
 
   save(employee:Employee):void {
-    console.log(employee);
     if (this.employee?.id) {
       this.employeeService.putEmployee(employee).subscribe(e => this.employee = e);
     } else {
@@ -51,7 +49,7 @@ export class EmployeeDetailsComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['/employee']);
+    this.router.navigate(['/employee']).then();
   }
 
   addSkill() {
