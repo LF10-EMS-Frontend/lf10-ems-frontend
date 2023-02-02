@@ -26,8 +26,10 @@ export class EmployeeService {
     return this.http.get<Employee>('/backend/employees/' + employeeId, this.httpOptions);
   }
 
-  //TODO: testen, ob sich das skillSet verändert hat und gegenbenen falls anlegen oder löschen
   public putEmployee(employee: Employee) {
+    if (employee.skillSet) {
+      this.checkForUpdatedSkillSet(employee);
+    }
     return this.http.put<Employee>(
       '/backend/employees/' + employee.id, employee, this.httpOptions)
       .pipe(catchError(
@@ -55,10 +57,28 @@ export class EmployeeService {
 
   private deleteQualificationForEmployee(qualification:Qualification, employee:Employee) {
     const options = {
-      headers: this.httpOptions,
+      headers: this.httpOptions.headers,
       body: qualification
-    }
-    return this.http.delete<Qualification>('/backend/employees/' + employee.id + '/qualifications', this.httpOptions)
+    };
+    return this.http.delete<Qualification>('/backend/employees/' + employee.id + '/qualifications', options)
       .pipe(catchError(this.errorService.handleError<Qualification>('deleteQualificationForEmployee', qualification)));
+  }
+
+  private checkForUpdatedSkillSet(employee:Employee) {
+    let oldEmployee:Employee;
+    this.fetchEmployee(employee.id!).subscribe(e => oldEmployee = e);
+    if (!oldEmployee!.skillSet) {
+      oldEmployee!.skillSet = [];
+    }
+    this.checkForNewSkills(oldEmployee!, employee);
+    this.checkForRemovedSkills(oldEmployee!, employee);
+  }
+
+  private checkForNewSkills(oldEmployee:Employee, employee:Employee) {
+    employee.skillSet?.filter(s => !oldEmployee.skillSet?.includes(s)).forEach(s => this.postQualificationForEmployee({skill: s}, oldEmployee));
+  }
+
+  private checkForRemovedSkills(oldEmployee:Employee, employee:Employee) {
+    oldEmployee.skillSet!.filter(s => !employee.skillSet!.includes(s)).forEach(s => this.deleteQualificationForEmployee({skill:s}, employee));
   }
 }
