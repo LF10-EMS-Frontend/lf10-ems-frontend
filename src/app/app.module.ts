@@ -11,6 +11,8 @@ import {initializeKeycloak} from "./utitlity/app.init";
 import { QualificationListComponent } from './qualification-list/qualification-list.component';
 import {FormsModule} from "@angular/forms";
 import { EmployeeDetailsComponent } from './employee-details/employee-details.component';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {NgSelectModule} from "@ng-select/ng-select";
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { EmployeeDetailsComponent } from './employee-details/employee-details.co
     HttpClientModule,
     AppRoutingModule,
     KeycloakAngularModule,
-    FormsModule
+    ReactiveFormsModule,
+    FormsModule,
+    NgSelectModule,
   ],
   providers: [
     {

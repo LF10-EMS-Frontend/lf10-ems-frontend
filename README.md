@@ -101,3 +101,8 @@ Wenn bei der Anfrage ans Backend ein Fehler in der Konsole (HttpStatus: 504) ang
 ```
 Dann muss ein neuer Container für das Backend gestartet werden.
 ![Bildschirm_foto 2023-01-18 um 09 27 05](https://user-images.githubusercontent.com/105700733/213125374-a90c5fa0-9abf-4a81-82b0-5f520fe423ab.png)
+
+## Our Bugs:
+### Qualifications
+- Backend error when Deleting does not work!
+- Update just does not work
