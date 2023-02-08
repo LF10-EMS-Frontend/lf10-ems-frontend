@@ -95,37 +95,21 @@ export class EmployeeDetailsComponent implements OnInit {
   }
 
   changes(): boolean {
-    if (!this.employee.getValue().id || this.employee.getValue().id === 0) {
-      if (
-        !this.employee.getValue().firstName &&
-        !this.employee.getValue().lastName &&
-        !this.employee.getValue().street &&
-        !this.employee.getValue().postcode &&
-        !this.employee.getValue().city &&
-        !this.employee.getValue().phone &&
-        this.employee.getValue().skillSet.length === 0
-      ) {
-        return false;
-      }
-    }
-
-    //if something changed
-    return true;
+    return !((!this.employee.getValue().id || this.employee.getValue().id === 0) &&
+      !this.employee.getValue().firstName &&
+      !this.employee.getValue().lastName &&
+      !this.employee.getValue().street &&
+      !this.employee.getValue().postcode &&
+      !this.employee.getValue().city &&
+      !this.employee.getValue().phone &&
+      this.employee.getValue().skillSet.length === 0);
   }
 
   openCancelPopup() {
     if (!this.changes()) {
       this.router.navigate(['/employee']).then();
     } else {
-      let ngbModalOptions: NgbModalOptions = {
-        backdrop : 'static',
-        keyboard : false
-      };
-      const modalRef = this.modalService.open(PopupComponent, ngbModalOptions);
-      modalRef.componentInstance.header = 'Warning';
-      modalRef.componentInstance.content = 'Do you really want to continue?';
-      modalRef.componentInstance.decision = true;
-      modalRef.result.then((r) => {
+      this.openPopup('Do you really want to continue?').then((r) => {
         if (r == true) {
           this.router.navigate(['/employee']).then();
         }
@@ -137,15 +121,7 @@ export class EmployeeDetailsComponent implements OnInit {
     if (!this.changes()) {
       this.router.navigate(['/employee']).then();
     } else {
-      let ngbModalOptions: NgbModalOptions = {
-        backdrop : 'static',
-        keyboard : false
-      };
-      const modalRef = this.modalService.open(PopupComponent, ngbModalOptions);
-      modalRef.componentInstance.header = 'Warning';
-      modalRef.componentInstance.content = 'Do you really want to delete this employee?';
-      modalRef.componentInstance.decision = true;
-      modalRef.result.then((r) => {
+      this.openPopup('Do you really want to delete this employee?').then((r) => {
         if (r == true) {
           this.employeeService.deleteEmployee(this.employee.value.id!).subscribe(() => {
             this.router.navigate(['/employee']).then();
@@ -153,5 +129,17 @@ export class EmployeeDetailsComponent implements OnInit {
         }
       });
     }
+  }
+
+  openPopup(content:string): Promise<any> {
+    let ngbModalOptions: NgbModalOptions = {
+      backdrop : 'static',
+      keyboard : false
+    };
+    const modalRef = this.modalService.open(PopupComponent, ngbModalOptions);
+    modalRef.componentInstance.header = 'Warning';
+    modalRef.componentInstance.content = content;
+    modalRef.componentInstance.decision = true;
+    return modalRef.result;
   }
 }
