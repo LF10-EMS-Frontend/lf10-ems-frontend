@@ -12,6 +12,9 @@ import { QualificationListComponent } from './qualification-list/qualification-l
 import {FormsModule} from "@angular/forms";
 import {ModalModule} from 'ngb-modal';
 import { PopupComponent } from './popup/popup.component';
+import { EmployeeDetailsComponent } from './employee-details/employee-details.component';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {NgSelectModule} from "@ng-select/ng-select";
 
 @NgModule({
   declarations: [
@@ -20,6 +23,8 @@ import { PopupComponent } from './popup/popup.component';
     QualificationListComponent,
     EmployeeListComponent,
     NavbarComponent,
+    EmployeeDetailsComponent
+    NavbarComponent,
     PopupComponent
   ],
   imports: [
@@ -27,6 +32,9 @@ import { PopupComponent } from './popup/popup.component';
     HttpClientModule,
     AppRoutingModule,
     KeycloakAngularModule,
+    ReactiveFormsModule,
+    FormsModule,
+    NgSelectModule,
     FormsModule,
     ModalModule
   ],
