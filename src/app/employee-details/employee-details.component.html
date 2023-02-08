@@ -84,6 +84,13 @@
       >
         Cancel
       </button>
+      <button *ngIf="employee.value.id"
+        type="button"
+        class="btn btn-primary"
+        (click)="delete()"
+      >
+        Delete
+      </button>
     </div>
   </form>
 </div>

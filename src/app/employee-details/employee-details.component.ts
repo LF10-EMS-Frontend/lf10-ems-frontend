@@ -66,7 +66,11 @@ export class EmployeeDetailsComponent implements OnInit {
   }
 
   cancel() {
-    this.openPopup();
+    this.openCancelPopup();
+  }
+
+  delete () {
+    this.openDeletePopup();
   }
 
   addSkill() {
@@ -88,10 +92,12 @@ export class EmployeeDetailsComponent implements OnInit {
   }
 
   changes(): boolean {
+    //if all empty and id = 0
+    //if something changed
     return true;
   }
 
-  openPopup() {
+  openCancelPopup() {
     if (!this.changes()) {
       this.router.navigate(['/employee']).then(() => window.location.reload());
     } else {
@@ -106,6 +112,28 @@ export class EmployeeDetailsComponent implements OnInit {
       modalRef.result.then((r) => {
         if (r == true) {
           this.router.navigate(['/employee']).then(() => window.location.reload());
+        }
+      });
+    }
+  }
+
+  openDeletePopup() {
+    if (!this.changes()) {
+      this.router.navigate(['/employee']).then(() => window.location.reload());
+    } else {
+      let ngbModalOptions: NgbModalOptions = {
+        backdrop : 'static',
+        keyboard : false
+      };
+      const modalRef = this.modalService.open(PopupComponent, ngbModalOptions);
+      modalRef.componentInstance.header = 'Warning';
+      modalRef.componentInstance.content = 'Do you really want to delete this employee?';
+      modalRef.componentInstance.decision = true;
+      modalRef.result.then((r) => {
+        if (r == true) {
+          this.employeeService.deleteEmployee(this.employee.value.id!).subscribe(() => {
+            this.router.navigate(['/employee']).then(() => window.location.reload());
+          });
         }
       });
     }
