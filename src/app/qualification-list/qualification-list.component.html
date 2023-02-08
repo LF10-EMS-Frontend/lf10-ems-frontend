@@ -1,4 +1,9 @@
-<app-navbar (searchChange)="searchChange.next($event)" ></app-navbar>
+<div *ngIf="editQualificationOld">
+  <app-navbar (searchChange)="searchChange.next($event)" [popups]="true" [yesNo]="true"></app-navbar>
+</div>
+<div *ngIf="!editQualificationOld">
+  <app-navbar (searchChange)="searchChange.next($event)" ></app-navbar>
+</div>
 <h1>All Qualifications</h1>
 <ul>
   <li *ngFor="let quali of qualifications$ | async">
@@ -39,5 +44,4 @@
       Add
     </button>
   </form>
-  <button type="button" (click)="openPopup()"></button>
 </div>

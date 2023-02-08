@@ -16,7 +16,7 @@ export class QualificationListComponent implements OnInit {
   editQualificationNew: string;
   searchChange: Subject<string> = new Subject();
 
-  constructor(private qualificationService: QualificationService, private modalService: NgbModal) {
+  constructor(private qualificationService: QualificationService) {
   }
 
   ngOnInit() {
@@ -63,16 +63,5 @@ export class QualificationListComponent implements OnInit {
       this.qualificationService.updateQualification(this.editQualificationOld!, skill)
     }
     this.editQualificationOld = undefined;
-  }
-
-  openPopup() {
-    let ngbModalOptions: NgbModalOptions = {
-      backdrop : 'static',
-      keyboard : false
-    };
-    const modalRef = this.modalService.open(PopupComponent, ngbModalOptions);
-    modalRef.componentInstance.header = 'Error';
-    modalRef.componentInstance.content = 'Do you really want to continue?';
-    modalRef.componentInstance.decision = false;
   }
 }
