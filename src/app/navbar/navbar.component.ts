@@ -53,7 +53,6 @@ export class NavbarComponent implements OnInit {
         if (r == true) {
           this.router.navigate([destination]).then(() => window.location.reload());
         }
-        console.log(r);
       });
     }
   }
