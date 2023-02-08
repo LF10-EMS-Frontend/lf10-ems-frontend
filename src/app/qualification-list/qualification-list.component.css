@@ -8,6 +8,11 @@ h1 {
   font-size: 2rem;
 }
 
+.quali-table {
+  max-width: 500px;
+  margin: 30px;
+}
+
 ul {
   list-style: none;
   margin-bottom: 30px;
@@ -30,14 +35,18 @@ input {
   padding: 0;
 }
 
-button {
-  width: 40px;
-  height: 30px;
-  padding: 0;
+.edit-save-button, .delete-button, .cancel-button, .add-button {
+  background-color: #F2921D;
+  border-color: #F2921D;
+  margin-right: 5px;
+  color: white;
 }
 
-.edit-save-button {
+.edit-save-button:hover, .delete-button:hover, .cancel-button:hover, .add-button:hover {
+  background-color: #F27329;
+  border-color: #F27329;
   margin-right: 5px;
+  color: white;
 }
 
 .qualification-entry {
