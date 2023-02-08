@@ -10,6 +10,8 @@ import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
 import {initializeKeycloak} from "./utitlity/app.init";
 import { QualificationListComponent } from './qualification-list/qualification-list.component';
 import {FormsModule} from "@angular/forms";
+import {ModalModule} from 'ngb-modal';
+import { PopupComponent } from './popup/popup.component';
 
 @NgModule({
   declarations: [
@@ -17,14 +19,16 @@ import {FormsModule} from "@angular/forms";
     EmployeeListComponent,
     QualificationListComponent,
     EmployeeListComponent,
-    NavbarComponent
+    NavbarComponent,
+    PopupComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     KeycloakAngularModule,
-    FormsModule
+    FormsModule,
+    ModalModule
   ],
   providers: [
     {
