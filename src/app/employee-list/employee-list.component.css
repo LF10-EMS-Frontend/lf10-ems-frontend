@@ -18,3 +18,7 @@ li {
 .employee-list-item:hover {
   cursor: pointer;
 }
+
+button {
+  margin-left: 10px;
+}
