@@ -1,26 +1,41 @@
 <app-navbar (searchChange)="search$.next($event)"></app-navbar>
-<h1>All Employees</h1>
+<h1 class="mt-3 mb-3">All Employees</h1>
 
-<ng-select
-  [clearSearchOnAdd]="true"
-  [closeOnSelect]="true"
-  [formControl]="selection$"
-  [items]="qualifications$ | async"
-  [multiple]="true"
-  [selectableGroup]="false"
-  bindLabel="skill"
->
-  <ng-template let-index="index" let-item="item" let-item$="item$" ng-option-tmp>
-    <input [ngModel]="item$.selected" id="item-{{index}}" type="checkbox"/> {{item}}
-  </ng-template>
-</ng-select>
+<div class="d-flex ml-3 mt-3 mb-3">
+  <ng-select
+    [clearSearchOnAdd]="true"
+    [closeOnSelect]="true"
+    [formControl]="selection$"
+    [items]="qualifications$ | async"
+    [multiple]="true"
+    [selectableGroup]="false"
+    bindLabel="skill"
+  >
+    <ng-template let-index="index" let-item="item" let-item$="item$" ng-option-tmp>
+      <input [ngModel]="item$.selected" id="item-{{index}}" type="checkbox"/> {{item}}
+    </ng-template>
+  </ng-select>
 
+  <svg width="24" height="24" viewBox="0 0 512 512">
+    <path
+      d="M3.9 54.9C10.5 40.9 24.5 32 40 32H472c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9V448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6V320.9L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z"/>
+  </svg>
+</div>
 
-<ul>
-  <li (click)="displayEmployee(e)" *ngFor="let e of employees$ | async" class="employee-list-item">
-    {{e.lastName }}, {{e.firstName}}
-  </li>
-</ul>
-<div>
-  <button (click)="navigateToNewEmployee()" class="btn btn-secondary" type="button"> New Employee</button>
+<div class="employee-listing">
+
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th scope="col">Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let e of employees$ | async" class="employee-list-item">
+      <td (click)="displayEmployee(e)">{{e.lastName }}, {{e.firstName}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <button (click)="navigateToNewEmployee()" class="btn btn-primary" type="button">Create new employee</button>
 </div>
