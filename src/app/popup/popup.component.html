@@ -7,11 +7,11 @@
   </div>
   <div class="button-container">
     <div class="yes-no-container" *ngIf="decision">
-      <button type="button" >Yes</button>
-      <button type="button" >No</button>
+      <button type="button" (click)="accept()" >Yes</button>
+      <button type="button" (click)="decline()">No</button>
     </div>
     <div class="right" *ngIf="!decision">
-      <button type="button">Close</button>
+      <button type="button" (click)="accept()" >Close</button>
     </div>
   </div>
 </div>

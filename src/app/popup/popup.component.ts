@@ -1,5 +1,5 @@
 import {Component, Input, NgZone, OnInit} from '@angular/core';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-popup',
@@ -16,5 +16,17 @@ export class PopupComponent implements OnInit {
   constructor(public activeModal:NgbActiveModal, private ngZone:NgZone) {}
 
   ngOnInit() {
+  }
+
+  public decline() {
+
+    this.activeModal.close(false);
+
+  }
+
+  public accept() {
+
+    this.activeModal.close(true);
+
   }
 }
