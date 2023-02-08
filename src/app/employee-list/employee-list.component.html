@@ -21,7 +21,9 @@
     {{e.lastName }}, {{e.firstName}}
   </li>
 </ul>
-
+<div>
+  <button (click)="navigateToNewEmployee()" class="btn btn-secondary" type="button"> New Employee</button>
+</div>
 <!-- Just for testing-->
 <button (click)="deleteEmployeeEndpoint()" class="test-button" type="button"> Delete</button>
 <button (click)="postEmployeeEndpoint()" class="test-button" type="button"> Post</button>

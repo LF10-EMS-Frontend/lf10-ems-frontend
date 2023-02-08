@@ -109,4 +109,8 @@ export class EmployeeListComponent implements OnInit {
         console.log('employee-list received: ' + message)
       );
   }
+
+  navigateToNewEmployee(): void {
+    this.router.navigate(['/employee/new']).then(() => window.location.reload());
+  }
 }
