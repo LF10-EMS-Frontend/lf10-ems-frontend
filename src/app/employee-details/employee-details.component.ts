@@ -28,21 +28,6 @@ export class EmployeeDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let id: string = this.route.snapshot.paramMap.get('id')!;
-    if (id === "new") {
-      return
-    }
-    if (isNaN(+id)) {
-      this.router.navigate(['/employee']).then(() => window.location.reload());
-      return
-    }
-    // this.employeeService.fetchEmployee(+id).subscribe(() => );
-    this.employeeService.getEmployees().pipe(skip(1)).subscribe((es: Employee[]) => {
-      if (!es.find((e: Employee) => e.id === +id)) {
-        this.router.navigate(['/employee']).then();
-      }
-      this.employee.next(es.find((e: Employee) => e.id === +id)!);
-    });
     this.qualifications = this.employee.pipe(
       map((e: Employee) => e.skillSet),
       switchMap((employeeSkills: string[]) => this.qualificationService.getQualifications().pipe(
@@ -52,6 +37,20 @@ export class EmployeeDetailsComponent implements OnInit {
         map((qs: string[]) => qs.sort())
       ))
     );
+    let id: string = this.route.snapshot.paramMap.get('id')!;
+    if (id === "new") {
+      return
+    }
+    if (isNaN(+id)) {
+      this.router.navigate(['/employee']).then(() => window.location.reload());
+      return
+    }
+    this.employeeService.getEmployees().pipe(skip(1)).subscribe((es: Employee[]) => {
+      if (!es.find((e: Employee) => e.id === +id)) {
+        this.router.navigate(['/employee']).then();
+      }
+      this.employee.next(es.find((e: Employee) => e.id === +id)!);
+    });
   }
 
   save(employee:Employee):void {
