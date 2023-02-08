@@ -106,11 +106,20 @@ export class EmployeeDetailsComponent implements OnInit {
         if (this.employee.getValue().id) {
           this.employeeService.putEmployee(employee).subscribe();
         } else {
-          this.employeeService.postEmployee(employee).subscribe();
+          this.employeeService.postEmployee(employee).subscribe((e) => {
+            if (e === 'Success') {
+              this.router.navigate(['/employee']).then();
+            } else {
+              this.openErrorPopup();
+            }
+          });
         }
-        this.router.navigate(['/employee']).then()
       }
     });
+  }
+
+  private openErrorPopup() {
+    this.openPopup('Error', 'An error occurred while saving!', false).then();
   }
 
   openCancelPopup() {
@@ -139,7 +148,7 @@ export class EmployeeDetailsComponent implements OnInit {
     }
   }
 
-  openPopup(header:string, content:string): Promise<any> {
+  openPopup(header:string, content:string, decision = true): Promise<any> {
     let ngbModalOptions: NgbModalOptions = {
       backdrop : 'static',
       keyboard : false
@@ -147,7 +156,7 @@ export class EmployeeDetailsComponent implements OnInit {
     const modalRef = this.modalService.open(PopupComponent, ngbModalOptions);
     modalRef.componentInstance.header = header;
     modalRef.componentInstance.content = content;
-    modalRef.componentInstance.decision = true;
+    modalRef.componentInstance.decision = decision;
     return modalRef.result;
   }
 }
