@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {QualificationService} from "../services/qualification.service";
 import {map, Observable, startWith, Subject, switchMap} from "rxjs";
-import {PopupComponent} from "../popup/popup.component";
-import {NgbModal, NgbModalOptions} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-qualification-list',
