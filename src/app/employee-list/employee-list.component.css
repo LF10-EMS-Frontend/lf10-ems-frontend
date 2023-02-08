@@ -3,6 +3,10 @@ h1 {
   font-size: 2rem;
 }
 
+.container {
+  margin: 15px;
+}
+
 svg {
   width: 30px;
   height: 30px;
