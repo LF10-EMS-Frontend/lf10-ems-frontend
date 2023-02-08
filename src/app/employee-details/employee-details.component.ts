@@ -38,6 +38,9 @@ export class EmployeeDetailsComponent implements OnInit {
     }
     this.employeeService.getEmployees().subscribe((es: Employee[]) => {
       this.employee.next(es.find((e: Employee) => e.id === +id)!);
+      if (!this.employee.value) {
+        this.router.navigate(['/employee']).then();
+      }
     });
     this.qualifications = this.employee.pipe(
       map((e: Employee) => e.skillSet),
