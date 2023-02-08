@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {EmployeeService} from "../services/employee.service";
 import {Employee} from "../Employee";
 import {QualificationService} from "../services/qualification.service";
-import {BehaviorSubject, map, Observable, switchMap} from "rxjs";
+import {BehaviorSubject, map, Observable, skip, switchMap} from "rxjs";
 import {NgbModal, NgbModalOptions} from "@ng-bootstrap/ng-bootstrap";
 import {PopupComponent} from "../popup/popup.component";
 
@@ -36,11 +36,12 @@ export class EmployeeDetailsComponent implements OnInit {
       this.router.navigate(['/employee']).then(() => window.location.reload());
       return
     }
-    this.employeeService.getEmployees().subscribe((es: Employee[]) => {
-      this.employee.next(es.find((e: Employee) => e.id === +id)!);
-      if (!this.employee.value) {
+    // this.employeeService.fetchEmployee(+id).subscribe(() => );
+    this.employeeService.getEmployees().pipe(skip(1)).subscribe((es: Employee[]) => {
+      if (!es.find((e: Employee) => e.id === +id)) {
         this.router.navigate(['/employee']).then();
       }
+      this.employee.next(es.find((e: Employee) => e.id === +id)!);
     });
     this.qualifications = this.employee.pipe(
       map((e: Employee) => e.skillSet),
