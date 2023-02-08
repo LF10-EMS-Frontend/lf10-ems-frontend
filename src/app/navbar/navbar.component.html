@@ -21,9 +21,8 @@
           <a class="nav-link" (click)="openPopup('qualifications')">Qualifications</a>
         </li>
       </ul>
-      <form class="d-flex" role="search">
+      <form *ngIf="searchbar" class="d-flex" role="search">
         <input [formControl]="searchControl" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn-submit btn px-2 py-1" type="submit">Search</button>
       </form>
       <a class="nav-link px-2 text-white" id="logout" (click)="logout()">Logout</a>
     </div>

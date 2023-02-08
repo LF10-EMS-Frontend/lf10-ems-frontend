@@ -15,6 +15,9 @@ export class NavbarComponent implements OnInit {
 
   @Input() popups:boolean = false;
   @Input() yesNo:boolean = false;
+  @Input() searchbar:boolean = true;
+  @Input() header:string = 'Warning';
+  @Input() content:string = 'Do you really want to continue?';
 
   constructor(private keycloakService: KeycloakService, private modalService: NgbModal, private router: Router,) {
   }
@@ -43,8 +46,8 @@ export class NavbarComponent implements OnInit {
         keyboard : false
       };
       const modalRef = this.modalService.open(PopupComponent, ngbModalOptions);
-      modalRef.componentInstance.header = 'Warning';
-      modalRef.componentInstance.content = 'Do you really want to continue?';
+      modalRef.componentInstance.header = this.header;
+      modalRef.componentInstance.content = this.content;
       modalRef.componentInstance.decision = this.yesNo;
       modalRef.result.then((r) => {
         if (r == true) {
