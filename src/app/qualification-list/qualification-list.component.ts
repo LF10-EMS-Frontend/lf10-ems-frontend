@@ -20,7 +20,6 @@ export class QualificationListComponent implements OnInit {
   ngOnInit() {
     this.qualifications$ = this.searchChange.pipe(
       startWith(''),
-      // tap((s: string) => console.log("searchChange: " + s)),
       switchMap((search: string) => this.qualificationService.getQualifications().pipe(
         map((skills: string[]) => this.filterFunction(skills, search)),
   )),

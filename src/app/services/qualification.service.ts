@@ -23,7 +23,7 @@ export class QualificationService {
   public fetchQualifications(): void {
     this.http.get<Qualification[]>('/backend/qualifications', this.httpOptions).pipe(
       map((qs: Qualification[]) => qs.map((q: Qualification) => q.skill)),
-      tap(skills => console.log('fetchQualifications: ' + skills))
+      tap()
     ).subscribe((skills: string[]) => this.qualifications$.next(skills))
   }
 

@@ -63,15 +63,12 @@ export class EmployeeListComponent implements OnInit {
   deleteEmployeeEndpoint() {
     this.employeeService.deleteEmployee(3)
       .subscribe( e => {
-        console.log("Employee-list delete error:");
-        console.log(e)
       })
   }
 
   postEmployeeEndpoint() {
     let rng: number = Math.floor(Math.random() * 100) + 1;
     const employee = new Employee(
-      // ['Java', 'Blabla']
       ['Angular', 'TypeScript'],
       undefined,
       'Mustermann' + rng,
@@ -81,12 +78,9 @@ export class EmployeeListComponent implements OnInit {
       'New York',
       '555-555-5555',
     );
-    console.log(employee);
     this.employeeService
       .postEmployee(employee)
-      .subscribe((message: string) =>
-        console.log('employee-list received: ' + message)
-      );
+      .subscribe();
   }
 
   putEmployeeEndpoint() {
@@ -101,13 +95,9 @@ export class EmployeeListComponent implements OnInit {
       'New York',
       '555-555-5555',
     );
-    console.log(employee);
-
     this.employeeService
       .putEmployee(employee)
-      .subscribe((message: string) =>
-        console.log('employee-list received: ' + message)
-      );
+      .subscribe();
   }
 
   navigateToNewEmployee(): void {

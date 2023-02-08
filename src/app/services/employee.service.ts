@@ -86,8 +86,7 @@ export class EmployeeService {
     this.http
       .get<Employee[]>('/backend/employees', this.httpOptions)
       .pipe(
-        // catchError(this.errorService.handleError())
-        tap(() => console.log('Employees fetched'))
+        tap()
       )
       .subscribe((es: Employee[]) => this.employees$.next(es));
   }
