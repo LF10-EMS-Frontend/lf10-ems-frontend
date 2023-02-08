@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Qualification} from "../Qualification";
 import {QualificationService} from "../services/qualification.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {PopupComponent} from "../popup/popup.component";
 
 @Component({
   selector: 'app-qualification-list',
@@ -14,7 +16,7 @@ export class QualificationListComponent implements OnInit {
   editQualification?: Qualification;
   oldQualificationSkill: string = '';
 
-  constructor(private qualificationService: QualificationService) {
+  constructor(private qualificationService: QualificationService, private modalService:NgbModal) {
   }
 
   ngOnInit() {
@@ -88,5 +90,12 @@ export class QualificationListComponent implements OnInit {
     } else {
       this.oldQualificationSkill = '';
     }
+  }
+
+  openPopup() {
+    const modalRef = this.modalService.open(PopupComponent);
+    modalRef.componentInstance.header = 'Error';
+    modalRef.componentInstance.content = 'Do you really want to continue?';
+    modalRef.componentInstance.decision = false;
   }
 }
