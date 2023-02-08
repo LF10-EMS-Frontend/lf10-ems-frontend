@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {QualificationService} from "../services/qualification.service";
 import {map, Observable, startWith, Subject, switchMap} from "rxjs";
 import {PopupComponent} from "../popup/popup.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbModalOptions} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-qualification-list',
@@ -66,7 +66,11 @@ export class QualificationListComponent implements OnInit {
   }
 
   openPopup() {
-    const modalRef = this.modalService.open(PopupComponent);
+    let ngbModalOptions: NgbModalOptions = {
+      backdrop : 'static',
+      keyboard : false
+    };
+    const modalRef = this.modalService.open(PopupComponent, ngbModalOptions);
     modalRef.componentInstance.header = 'Error';
     modalRef.componentInstance.content = 'Do you really want to continue?';
     modalRef.componentInstance.decision = false;
