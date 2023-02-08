@@ -42,7 +42,7 @@ export class EmployeeDetailsComponent implements OnInit {
       return
     }
     if (isNaN(+id)) {
-      this.router.navigate(['/employee']).then(() => window.location.reload());
+      this.router.navigate(['/employee']).then();
       return
     }
     this.employeeService.getEmployees().pipe(skip(1)).subscribe((es: Employee[]) => {
@@ -59,7 +59,7 @@ export class EmployeeDetailsComponent implements OnInit {
     } else {
       this.employeeService.postEmployee(employee).subscribe();
     }
-    this.router.navigate(['/employee']).then(() => window.location.reload())
+    this.router.navigate(['/employee']).then()
   }
 
   deleteSkillFromEmployee(skill:String) {
@@ -95,14 +95,27 @@ export class EmployeeDetailsComponent implements OnInit {
   }
 
   changes(): boolean {
-    //if all empty and id = 0
+    if (!this.employee.getValue().id || this.employee.getValue().id === 0) {
+      if (
+        !this.employee.getValue().firstName &&
+        !this.employee.getValue().lastName &&
+        !this.employee.getValue().street &&
+        !this.employee.getValue().postcode &&
+        !this.employee.getValue().city &&
+        !this.employee.getValue().phone &&
+        this.employee.getValue().skillSet.length === 0
+      ) {
+        return false;
+      }
+    }
+
     //if something changed
     return true;
   }
 
   openCancelPopup() {
     if (!this.changes()) {
-      this.router.navigate(['/employee']).then(() => window.location.reload());
+      this.router.navigate(['/employee']).then();
     } else {
       let ngbModalOptions: NgbModalOptions = {
         backdrop : 'static',
@@ -114,7 +127,7 @@ export class EmployeeDetailsComponent implements OnInit {
       modalRef.componentInstance.decision = true;
       modalRef.result.then((r) => {
         if (r == true) {
-          this.router.navigate(['/employee']).then(() => window.location.reload());
+          this.router.navigate(['/employee']).then();
         }
       });
     }
@@ -122,7 +135,7 @@ export class EmployeeDetailsComponent implements OnInit {
 
   openDeletePopup() {
     if (!this.changes()) {
-      this.router.navigate(['/employee']).then(() => window.location.reload());
+      this.router.navigate(['/employee']).then();
     } else {
       let ngbModalOptions: NgbModalOptions = {
         backdrop : 'static',
@@ -135,7 +148,7 @@ export class EmployeeDetailsComponent implements OnInit {
       modalRef.result.then((r) => {
         if (r == true) {
           this.employeeService.deleteEmployee(this.employee.value.id!).subscribe(() => {
-            this.router.navigate(['/employee']).then(() => window.location.reload());
+            this.router.navigate(['/employee']).then();
           });
         }
       });

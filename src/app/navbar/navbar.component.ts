@@ -39,7 +39,7 @@ export class NavbarComponent implements OnInit {
 
   openPopup(destination:string) {
     if (!this.popups) {
-      this.router.navigate([destination]).then(() => window.location.reload());
+      this.router.navigate([destination]).then();
     } else {
       let ngbModalOptions: NgbModalOptions = {
         backdrop : 'static',
@@ -51,7 +51,7 @@ export class NavbarComponent implements OnInit {
       modalRef.componentInstance.decision = this.yesNo;
       modalRef.result.then((r) => {
         if (r == true) {
-          this.router.navigate([destination]).then(() => window.location.reload());
+          this.router.navigate([destination]).then();
         }
       });
     }
