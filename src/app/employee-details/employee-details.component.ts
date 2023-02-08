@@ -4,6 +4,8 @@ import {EmployeeService} from "../services/employee.service";
 import {Employee} from "../Employee";
 import {QualificationService} from "../services/qualification.service";
 import {BehaviorSubject, map, Observable, switchMap} from "rxjs";
+import {NgbModal, NgbModalOptions} from "@ng-bootstrap/ng-bootstrap";
+import {PopupComponent} from "../popup/popup.component";
 
 @Component({
   selector: 'app-employee-details',
@@ -21,14 +23,14 @@ export class EmployeeDetailsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
-    private qualificationService:QualificationService
+    private qualificationService:QualificationService,
+    private modalService:NgbModal
   ) {}
 
   ngOnInit(): void {
     let id: string = this.route.snapshot.paramMap.get('id')!;
     if (id === "new") {
       return
-      // this.employeeSkills.next(this.employee.getValue().skillSet!)
     }
     if (isNaN(+id)) {
       this.router.navigate(['/employee']).then(() => window.location.reload());
@@ -60,11 +62,11 @@ export class EmployeeDetailsComponent implements OnInit {
   deleteSkillFromEmployee(skill:String) {
     let employee = this.employee.getValue()
     employee.skillSet = employee.skillSet!.filter((s) => s !== skill);
-    this.employee.next(employee)
+    this.employee.next(employee);
   }
 
   cancel() {
-    this.router.navigate(['/employee']).then(() => window.location.reload());
+    this.openPopup();
   }
 
   addSkill() {
@@ -82,6 +84,30 @@ export class EmployeeDetailsComponent implements OnInit {
       this.selectedSkill = this.newSkill;
       this.addSkill();
       this.newSkill = "";
+    }
+  }
+
+  changes(): boolean {
+    return true;
+  }
+
+  openPopup() {
+    if (!this.changes()) {
+      this.router.navigate(['/employee']).then(() => window.location.reload());
+    } else {
+      let ngbModalOptions: NgbModalOptions = {
+        backdrop : 'static',
+        keyboard : false
+      };
+      const modalRef = this.modalService.open(PopupComponent, ngbModalOptions);
+      modalRef.componentInstance.header = 'Warning';
+      modalRef.componentInstance.content = 'Do you really want to continue?';
+      modalRef.componentInstance.decision = true;
+      modalRef.result.then((r) => {
+        if (r == true) {
+          this.router.navigate(['/employee']).then(() => window.location.reload());
+        }
+      });
     }
   }
 }
