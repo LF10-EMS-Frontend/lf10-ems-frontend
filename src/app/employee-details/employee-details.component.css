@@ -74,6 +74,7 @@ svg:hover {
 .btn-primary {
   background-color: #F2921D;
   border-color: #F2921D;
+  margin: 0 2px;
 }
 
 .btn-primary:hover {
@@ -81,13 +82,13 @@ svg:hover {
   border-color: #F27329;
 }
 
-.btn-cancel {
+.btn-delete {
   background-color: #D93E30;
   border-color: #D93E30;
-  margin: 0 5px;
+  margin: 0 10px;
 }
 
-.btn-cancel:hover {
+.btn-delete:hover {
   background-color: #8C2727;
   border-color: #8C2727;
 }

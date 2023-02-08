@@ -87,14 +87,14 @@
       </button>
       <button
         type="button"
-        class="btn btn-primary btn-cancel"
+        class="btn btn-primary"
         (click)="cancel()"
       >
         Cancel
       </button>
       <button *ngIf="employee.value.id"
         type="button"
-        class="btn btn-cancel"
+        class="btn btn-primary btn-delete"
         (click)="delete()"
       >
         Delete
