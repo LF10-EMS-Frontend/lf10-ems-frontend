@@ -54,12 +54,7 @@ export class EmployeeDetailsComponent implements OnInit {
   }
 
   save(employee:Employee):void {
-    if (this.employee.getValue().id) {
-      this.employeeService.putEmployee(employee).subscribe();
-    } else {
-      this.employeeService.postEmployee(employee).subscribe();
-    }
-    this.router.navigate(['/employee']).then()
+    this.openSaveConfirmation(employee);
   }
 
   deleteSkillFromEmployee(skill:String) {
@@ -105,12 +100,25 @@ export class EmployeeDetailsComponent implements OnInit {
       this.employee.getValue().skillSet.length === 0);
   }
 
+  openSaveConfirmation(employee:Employee) {
+    this.openPopup('Save confirmation', 'Do you really want to save your changes?').then((r) => {
+      if (r) {
+        if (this.employee.getValue().id) {
+          this.employeeService.putEmployee(employee).subscribe();
+        } else {
+          this.employeeService.postEmployee(employee).subscribe();
+        }
+        this.router.navigate(['/employee']).then()
+      }
+    });
+  }
+
   openCancelPopup() {
     if (!this.changes()) {
       this.router.navigate(['/employee']).then();
     } else {
-      this.openPopup('Do you really want to continue?').then((r) => {
-        if (r == true) {
+      this.openPopup('Leave confirmation', 'Do you really want to leave without saving?').then((r) => {
+        if (r) {
           this.router.navigate(['/employee']).then();
         }
       });
@@ -121,8 +129,8 @@ export class EmployeeDetailsComponent implements OnInit {
     if (!this.changes()) {
       this.router.navigate(['/employee']).then();
     } else {
-      this.openPopup('Do you really want to delete this employee?').then((r) => {
-        if (r == true) {
+      this.openPopup('Delete confirmation', 'Do you really want to delete this employee?').then((r) => {
+        if (r) {
           this.employeeService.deleteEmployee(this.employee.value.id!).subscribe(() => {
             this.router.navigate(['/employee']).then();
           });
@@ -131,13 +139,13 @@ export class EmployeeDetailsComponent implements OnInit {
     }
   }
 
-  openPopup(content:string): Promise<any> {
+  openPopup(header:string, content:string): Promise<any> {
     let ngbModalOptions: NgbModalOptions = {
       backdrop : 'static',
       keyboard : false
     };
     const modalRef = this.modalService.open(PopupComponent, ngbModalOptions);
-    modalRef.componentInstance.header = 'Warning';
+    modalRef.componentInstance.header = header;
     modalRef.componentInstance.content = content;
     modalRef.componentInstance.decision = true;
     return modalRef.result;
