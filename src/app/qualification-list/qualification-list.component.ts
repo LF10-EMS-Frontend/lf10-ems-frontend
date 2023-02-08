@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {QualificationService} from "../services/qualification.service";
-import {BehaviorSubject, map, Observable, startWith, Subject, switchMap, tap} from "rxjs";
+import {map, Observable, startWith, Subject, switchMap} from "rxjs";
+import {PopupComponent} from "../popup/popup.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-qualification-list',
@@ -14,7 +16,7 @@ export class QualificationListComponent implements OnInit {
   editQualificationNew: string;
   searchChange: Subject<string> = new Subject();
 
-  constructor(private qualificationService: QualificationService) {
+  constructor(private qualificationService: QualificationService, private modalService: NgbModal) {
   }
 
   ngOnInit() {
@@ -61,5 +63,12 @@ export class QualificationListComponent implements OnInit {
       this.qualificationService.updateQualification(this.editQualificationOld!, skill)
     }
     this.editQualificationOld = undefined;
+  }
+
+  openPopup() {
+    const modalRef = this.modalService.open(PopupComponent);
+    modalRef.componentInstance.header = 'Error';
+    modalRef.componentInstance.content = 'Do you really want to continue?';
+    modalRef.componentInstance.decision = false;
   }
 }
