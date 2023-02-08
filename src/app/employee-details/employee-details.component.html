@@ -7,69 +7,77 @@
 
 <div *ngIf="(employee.value)" class="container">
   <h1>Employee: {{(employee.value).firstName}} {{(employee.value).lastName}}</h1>
-  <div class="attribute-container">
-    <label class="attribute-label">id:</label>
-    <p>{{(employee.value).id}}</p>
-  </div>
   <form>
-    <div class="attribute-container">
-      <p class="attribute-label">First name:</p>
-      <input name="first-name" [(ngModel)]="(employee.value).firstName">
-    </div>
-    <div class="attribute-container">
-      <p class="attribute-label">Last name:</p>
-      <input name="last-name" [(ngModel)]="(employee.value).lastName">
-    </div>
-    <div class="attribute-container">
-      <p class="attribute-label">Street:</p>
-      <input name="street" [(ngModel)]="(employee.value).street">
-    </div>
-    <div class="attribute-container">
-      <p class="attribute-label">Postcode:</p>
-      <input name="postcode" [(ngModel)]="(employee.value).postcode">
-    </div>
-    <div class="attribute-container">
-      <p class="attribute-label">City:</p>
-      <input name="city" [(ngModel)]="(employee.value).city">
-    </div>
-    <div class="attribute-container">
-      <p class="attribute-label">Phone:</p>
-      <input name="phone" [(ngModel)]="(employee.value).phone">
-    </div>
-    <div class="attribute-container">
-      <p class="attribute-label">Skill Set:</p>
-      <div class="attribute-content">
-        <ul class="skill-container" *ngIf="(employee.value).skillSet">
-          <li *ngFor="let skill of (employee.value).skillSet">
-            <div class="skill-item">
-              {{skill}}
-              <div class="minus-btn" (click)="deleteSkillFromEmployee(skill)">
-                -
+
+    <table class="table table-hover">
+      <tbody>
+      <tr>
+        <td>ID:</td>
+        <td>{{(employee.value).id}}</td>
+      </tr>
+      <tr>
+        <td>First name:</td>
+        <td><input name="first-name" [(ngModel)]="(employee.value).firstName"></td>
+      </tr>
+      <tr>
+        <td>Last name:</td>
+        <td><input name="last-name" [(ngModel)]="(employee.value).lastName"></td>
+      </tr>
+      <tr>
+        <td>Street:</td>
+        <td><input name="street" [(ngModel)]="(employee.value).street"></td>
+      </tr>
+      <tr>
+        <td>Postal Code:</td>
+        <td><input name="postcode" [(ngModel)]="(employee.value).postcode"></td>
+      </tr>
+      <tr>
+        <td>City:</td>
+        <td><input name="city" [(ngModel)]="(employee.value).city"></td>
+      </tr>
+      <tr>
+        <td>Phone:</td>
+        <td><input name="phone" [(ngModel)]="(employee.value).phone"></td>
+      </tr>
+      <tr>
+        <td>Skillset:</td>
+        <td>
+          <div class="attribute-content">
+          <ul class="skill-container" *ngIf="(employee.value).skillSet">
+            <li *ngFor="let skill of (employee.value).skillSet">
+              <div class="skill-item pr-3">
+                {{skill}}
+                  <svg (click)="deleteSkillFromEmployee(skill)" class="delete-btn" width="20" height="20" viewBox="0 0 576 512">
+                    <path d="M576 128c0-35.3-28.7-64-64-64H205.3c-17 0-33.3 6.7-45.3 18.7L9.4 233.4c-6 6-9.4 14.1-9.4 22.6s3.4 16.6 9.4 22.6L160 429.3c12 12 28.3 18.7 45.3 18.7H512c35.3 0 64-28.7 64-64V128zM271 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"/>
+                  </svg>
               </div>
-            </div>
-          </li>
-        </ul>
-        <div class="dropdown-container">
-          <p class="dropdown-label">Select</p>
-          <select name="dropdown" class="dropdown-dropdown" [(ngModel)]="selectedSkill" (change)="addSkill()">
-            <option selected hidden>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
-            <option *ngFor="let qualification of qualifications | async">
-              {{qualification}}
-            </option>
-          </select>
+            </li>
+          </ul>
+          <div class="dropdown-container">
+            <label for="skill-select">Select&nbsp;</label>
+            <select name="dropdown" class="dropdown-dropdown" id="skill-select" [(ngModel)]="selectedSkill" (change)="addSkill()">
+              <option selected hidden>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+              <option *ngFor="let qualification of qualifications | async">
+                {{qualification}}
+              </option>
+            </select>
+          </div>
+          <div class="new-qualification-container">
+            <label for="new-skill">Create new&nbsp;</label>
+            <input class="new-qualification-input" name="newSkill" id="new-skill" [(ngModel)]="newSkill">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="createQualification()">
+              Add
+            </button>
+          </div>
         </div>
-        <div class="new-qualification-container">
-          <p class="new-qualification-label">Create</p>
-          <input class="new-qualification-input" name="newSkill" [(ngModel)]="newSkill">
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="createQualification()">
-            Add
-          </button>
-        </div>
-      </div>
-    </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
     <div class="button-container">
       <button
         type="button"
@@ -79,14 +87,14 @@
       </button>
       <button
         type="button"
-        class="btn btn-primary cancel-btn"
+        class="btn btn-primary btn-cancel"
         (click)="cancel()"
       >
         Cancel
       </button>
       <button *ngIf="employee.value.id"
         type="button"
-        class="btn btn-primary"
+        class="btn btn-cancel"
         (click)="delete()"
       >
         Delete
