@@ -9,7 +9,11 @@ import { NavbarComponent } from './navbar/navbar.component';
 import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
 import {initializeKeycloak} from "./utitlity/app.init";
 import { QualificationListComponent } from './qualification-list/qualification-list.component';
-import {FormsModule} from "@angular/forms";
+import {ModalModule} from 'ngb-modal';
+import { PopupComponent } from './popup/popup.component';
+import { EmployeeDetailsComponent } from './employee-details/employee-details.component';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {NgSelectModule} from "@ng-select/ng-select";
 
 @NgModule({
   declarations: [
@@ -17,14 +21,21 @@ import {FormsModule} from "@angular/forms";
     EmployeeListComponent,
     QualificationListComponent,
     EmployeeListComponent,
-    NavbarComponent
+    NavbarComponent,
+    EmployeeDetailsComponent,
+    NavbarComponent,
+    PopupComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     KeycloakAngularModule,
-    FormsModule
+    ReactiveFormsModule,
+    FormsModule,
+    NgSelectModule,
+    FormsModule,
+    ModalModule
   ],
   providers: [
     {

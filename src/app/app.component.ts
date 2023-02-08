@@ -9,6 +9,7 @@ import {Observable, of} from "rxjs";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  title: 'employeeFrontendStarter';
 
   constructor() {
  }

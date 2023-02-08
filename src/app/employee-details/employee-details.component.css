@@ -1,0 +1,85 @@
+.container {
+  margin: 40px;
+}
+
+h1 {
+  margin-bottom: 40px;
+}
+
+.attribute-container {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid black;
+  font-size: 1.5rem;
+}
+
+.attribute-label {
+  font-weight: bold;
+  width: 250px;
+}
+
+.skill-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.skill-item {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.minus-btn {
+  font-size: 1rem;
+  margin-left: 5px;
+  color: red;
+  background-color: #EFEFEF;
+  border: none;
+  font-weight: bolder;
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  box-shadow: 2px 2px 2px gray;
+}
+
+.minus-btn:hover {
+  cursor: pointer;
+  background-color: #BBBBBB;
+}
+
+.minus-btn:active {
+  cursor: pointer;
+  background-color: #BBBBBB;
+  box-shadow: none;
+}
+
+.dropdown-container {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-label {
+  width: 80px;
+}
+
+.new-qualification-container {
+  display: flex;
+  align-items: center;
+}
+
+.new-qualification-label {
+  width: 80px;
+}
+
+.new-qualification-input {
+  margin-right: 10px;
+}
+
+.button-container {
+  margin-top: 10px;
+  justify-items: left;
+}
+
+.cancel-btn {
+  margin: 0 5px;
+}

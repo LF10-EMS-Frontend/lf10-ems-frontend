@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import {KeycloakService} from "keycloak-angular";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {Employee} from "../Employee";
-
 @Injectable({
   providedIn: 'root'
 })
@@ -17,16 +14,12 @@ export class RequestService {
   };
 
   constructor(private keycloakService: KeycloakService, private http: HttpClient) {
-    this.initializeUserOptions();
-  }
-
-  private initializeUserOptions() {
-    this.initBearerToken();
+    this.initBearerToken().then();
   }
 
   public getHttpOption(): {headers: HttpHeaders} {
     if (this.bearer === '') {
-      this.initializeUserOptions();
+      this.initBearerToken().then()
     }
     return this.httpOptions;
   }
