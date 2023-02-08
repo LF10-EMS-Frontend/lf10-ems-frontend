@@ -47,7 +47,7 @@
         <div class="dropdown-container">
           <p class="dropdown-label">Select</p>
           <select name="dropdown" class="dropdown-dropdown" [(ngModel)]="selectedSkill" (change)="addSkill()">
-            <option selected hidden></option>
+            <option selected hidden>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
             <option *ngFor="let qualification of qualifications | async">
               {{qualification}}
             </option>

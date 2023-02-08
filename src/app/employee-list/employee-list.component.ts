@@ -57,7 +57,7 @@ export class EmployeeListComponent implements OnInit {
 
   // Below are just testing Methods, which will eventually be deleted
   displayEmployee(employee: Employee) {
-    this.router.navigate(['/employee/' + employee.id]).then()
+    this.router.navigate(['/employee/' + employee.id]).then(() => window.location.reload())
   }
 
   deleteEmployeeEndpoint() {

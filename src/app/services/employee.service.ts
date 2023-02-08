@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RequestService } from './request.service';
 import { Employee } from '../Employee';
@@ -87,7 +87,7 @@ export class EmployeeService {
       .get<Employee[]>('/backend/employees', this.httpOptions)
       .pipe(
         // catchError(this.errorService.handleError())
-        tap((es: Employee[]) => console.log('Employees fetched'))
+        tap(() => console.log('Employees fetched'))
       )
       .subscribe((es: Employee[]) => this.employees$.next(es));
   }
@@ -107,9 +107,18 @@ export class EmployeeService {
   }
 
   private checkForUpdatedSkillSet(employee:Employee) {
-    let oldEmployee:Employee = this.employees$.getValue().find((e: Employee) => e.id === employee!.id!)!
-    this.checkForNewSkills(oldEmployee, employee);
-    this.checkForRemovedSkills(oldEmployee, employee);
+    this.employees$.subscribe((es) => {
+      es.forEach(e => {
+        if (e.id === employee.id) {
+          let oldEmployee:Employee = e;
+          if (!oldEmployee.skillSet) {
+            oldEmployee.skillSet = [];
+          }
+          this.checkForNewSkills(oldEmployee, employee);
+          this.checkForRemovedSkills(oldEmployee, employee);
+        }
+      })
+    })
   }
 
   private checkForNewSkills(oldEmployee:Employee, employee:Employee) {
