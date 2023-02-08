@@ -19,14 +19,10 @@ export class PopupComponent implements OnInit {
   }
 
   public decline() {
-
     this.activeModal.close(false);
-
   }
 
   public accept() {
-
     this.activeModal.close(true);
-
   }
 }
