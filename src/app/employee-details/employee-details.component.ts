@@ -104,13 +104,19 @@ export class EmployeeDetailsComponent implements OnInit {
     this.openPopup('Save confirmation', 'Do you really want to save your changes?').then((r) => {
       if (r) {
         if (this.employee.getValue().id) {
-          this.employeeService.putEmployee(employee).subscribe();
+          this.employeeService.putEmployee(employee).subscribe((e) => {
+            if (e === 'Success') {
+              this.router.navigate(['/employee']).then();
+            } else {
+              this.openErrorPopup();
+            }
+          });
         } else {
           this.employeeService.postEmployee(employee).subscribe((e) => {
             if (e === 'Success') {
               this.router.navigate(['/employee']).then();
             } else {
-              this.openErrorPopup();
+             this.openErrorPopup();
             }
           });
         }
